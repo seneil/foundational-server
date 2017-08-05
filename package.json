@@ -1,0 +1,20 @@
+{
+  "name": "note-keeper-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "./server/index.js",
+  "private": true,
+  "scripts": {
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+  },
+  "engines": {
+    "node": ">=6.9",
+    "npm": ">=4.0"
+  },
+  "devDependencies": {
+  }
+}

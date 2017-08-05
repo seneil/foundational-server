@@ -1,0 +1,79 @@
+{
+  "extends": "airbnb",
+  "globals": {
+    "React": true,
+    "Component": true,
+    "PropTypes": true,
+    "ReactDOM": true,
+    "browserHistory": true,
+    "Router": true,
+    "Route": true,
+    "IndexRoute": true,
+    "Provider": true,
+    "createStore": true,
+    "applyMiddleware": true,
+    "useRouterHistory": true,
+    "createHistory": true,
+    "fetch": true,
+    "thunkMiddleware": true,
+    "describe": true,
+    "expect": true,
+    "beforeEach": true,
+    "it": true,
+    "APPLICATION_VERSION": true,
+    "BUILD_TIMESTAMP": true,
+    "APPLICATION_ENVIRONMENT": true,
+    "GIT_COMMIT": true,
+    "ENV": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false,
+        "classes": false
+      }
+    ],
+    "global-require": 0,
+    "no-console": 0,
+    "no-alert": 0,
+    "no-param-reassign": 0,
+    "max-len": 0,
+    "arrow-parens": [
+      "error",
+      "as-needed"
+    ],
+    "func-names": [
+      "error",
+      "never"
+    ],
+    "space-before-function-paren": [
+      "error",
+      "never"
+    ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_id"
+        ]
+      }
+    ],
+    "react/jsx-tag-spacing": [
+      "error",
+      {
+        "beforeSelfClosing": "always"
+      }
+    ],
+    "react/jsx-pascal-case": 0,
+    "react/prefer-stateless-function": 0,
+    "camelcase": 0
+  }
+}
