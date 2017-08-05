@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+WORKING_DIRECTORY=`pwd`
+NODE_ENV=dev node $WORKING_DIRECTORY/server

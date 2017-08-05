@@ -5,11 +5,22 @@
   "main": "./server/index.js",
   "private": true,
   "scripts": {
+    "start": "bash ./config/bin/server",
+    "mdb": "mongod --rest --httpinterface --dbpath ./mdb"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "html-to-json": "^0.6.0",
+    "jsonfile": "^3.0.1",
+    "mongodb-short-id": "^0.3.2",
+    "mongoose": "^4.11.3",
+    "morgan": "^1.8.2",
+    "node-metainspector": "git+https://github.com/dshster/node-metainspector.git",
+    "path-to-regexp": "^1.7.0"
   },
   "engines": {
     "node": ">=6.9",
