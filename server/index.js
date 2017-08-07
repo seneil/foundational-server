@@ -8,6 +8,8 @@ const router = express.Router();
 
 const config = require('../config/config');
 
+const postAccount = require('./routes/post-account');
+
 const getNotesRoute = require('./routes/get-notes');
 const getNoteRoute = require('./routes/get-note');
 const postNoteRoute = require('./routes/post-note');
@@ -17,6 +19,7 @@ mongoose.Promise = global.Promise;
 router.route('/notes').get(getNotesRoute);
 router.route('/notes/:name').get(getNoteRoute);
 router.route('/notes').post(postNoteRoute);
+router.route('/account').post(postAccount);
 
 router.use((request, response, next) => {
   request.moderated = false;

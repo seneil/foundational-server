@@ -12,9 +12,11 @@ const server = require('../server');
 
 const noteSchema = require('../server/schemas/note-schema');
 const openGraphSchema = require('../server/schemas/opengraph-schema');
+const accountSchema = require('../server/schemas/account-schema');
 
 const Note = mongoose.model('Note', noteSchema);
 const OpenGraph = mongoose.model('OpenGraph', openGraphSchema);
+const Account = mongoose.model('Account', accountSchema);
 
 chai.use(chaiHttp);
 
@@ -50,10 +52,14 @@ describe('Запросы к серверу', function() {
   });
 
   beforeEach(function(done) {
-    Note.remove({}, noteError => {
-      OpenGraph.remove({}, openGraphError => {
-        done(openGraphError || noteError);
-      });
+    const commands = [
+      Note.remove({}).exec(),
+      OpenGraph.remove({}).exec(),
+      Account.remove({}).exec(),
+    ];
+
+    Promise.all(commands).then(() => {
+      done();
     });
   });
 
@@ -234,6 +240,55 @@ describe('Запросы к серверу', function() {
               expect(getResponse.body.note.attachments[0].opengraph.image)
                 .to.equal('http://example.com/images/example.png');
               done();
+            });
+        });
+    });
+  });
+
+  describe('/POST account', function() {
+    it('Должны быть сохранены данные аккаунта', function(done) {
+      const data = {
+        username: 'dshster',
+        email: 'account@example.com',
+        password: 'password',
+      };
+
+      chai.request(server)
+        .post('/api/account')
+        .send(data)
+        .end((error, response) => {
+          if (error) return done(error);
+
+          expect(response.status).to.equal(200);
+          expect(response.body.account).to.be.an('object');
+          expect(response.body.account.username).to.equal('dshster');
+          expect(response.body.account).to.have.a.property('password');
+          return done();
+        });
+    });
+
+    it('Должна быть ошибка при дублировании данных аккаунта', function(done) {
+      const data = {
+        username: 'dshster',
+        email: 'account@example.com',
+        password: 'password',
+      };
+
+      chai.request(server)
+        .post('/api/account')
+        .send(data)
+        .end(error => {
+          if (error) return done(error);
+
+          chai.request(server)
+            .post('/api/account')
+            .send(data)
+            .end(errorRequest => {
+              expect(errorRequest.response.status).to.equal(500);
+              expect(errorRequest.response.body).to.be.an('object');
+              expect(errorRequest.response.body.message).to.have.a.property('email');
+              expect(errorRequest.response.body.message).to.have.a.property('username');
+              return done();
             });
         });
     });
