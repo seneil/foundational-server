@@ -1,5 +1,6 @@
 const crypto = require('crypto');
 const Schema = require('mongoose').Schema;
+const uniqueValidator = require('mongoose-unique-validator');
 
 const tagSchema = require('./tag-schema');
 const emailSchema = require('./email-schema');
@@ -24,12 +25,15 @@ const noteSchema = new Schema({
   name: {
     type: String,
     index: true,
+    unique: true,
     required: true,
   },
   hashtags: [tagSchema],
   emails: [emailSchema],
   attachments: [attachmentSchema],
 });
+
+noteSchema.plugin(uniqueValidator);
 
 noteSchema.statics.parseNote = function(data) {
   const { html, emails, urls, hashtags } = parseNote(data.body);

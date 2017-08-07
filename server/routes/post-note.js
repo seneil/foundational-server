@@ -22,7 +22,9 @@ module.exports = (request, response) => {
       response.status(500).json({ error: true, message: validate.errors });
     } else {
       note.save(error => {
-        if (error) throw error;
+        if (error) {
+          return response.status(500).json({ error: true, message: error.errors });
+        }
 
         if (note.attachments.length) {
           note.attachments.forEach(attachment => {
@@ -44,7 +46,7 @@ module.exports = (request, response) => {
           });
         }
 
-        response.status(200).json({ note });
+        return response.status(200).json({ note });
       });
     }
   } else {
