@@ -100,9 +100,9 @@ describe('Запросы к серверу', function() {
       note.name = shortID.objectIDtoShort(note._id);
 
       note.save(error => {
-        if (error) done(error);
+        if (error) return done(error);
 
-        chai.request(server)
+        return chai.request(server)
           .get(`/api/notes/${note.name}`)
           .end((error, response) => {
             expect(response.status).to.equal(200);
@@ -151,16 +151,18 @@ describe('Запросы к серверу', function() {
         .end((error, response) => {
           if (error) done(error);
 
-          chai.request(server)
-            .get(`/api/notes/${response.body.note.name}`)
-            .end((getError, getResponse) => {
-              expect(getResponse.status).to.equal(200);
-              expect(getResponse.body.note.attachments.length)
-                .to.equal(1);
-              expect(getResponse.body.note.attachments[0].opengraph.title)
-                .to.equal('OpenGraph Title: Scratched document');
-              done();
-            });
+          setTimeout(() => {
+            chai.request(server)
+              .get(`/api/notes/${response.body.note.name}`)
+              .end((getError, getResponse) => {
+                expect(getResponse.status).to.equal(200);
+                expect(getResponse.body.note.attachments.length)
+                  .to.equal(1);
+                expect(getResponse.body.note.attachments[0].opengraph.title)
+                  .to.equal('OpenGraph Title: Scratched document');
+                done();
+              });
+          }, 200);
         });
     });
 
