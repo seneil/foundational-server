@@ -13,10 +13,12 @@ const server = require('../server');
 const noteSchema = require('../server/schemas/note-schema');
 const openGraphSchema = require('../server/schemas/opengraph-schema');
 const accountSchema = require('../server/schemas/account-schema');
+const sessionSchema = require('../server/schemas/session-schema');
 
 const Note = mongoose.model('Note', noteSchema);
 const OpenGraph = mongoose.model('OpenGraph', openGraphSchema);
 const Account = mongoose.model('Account', accountSchema);
+const Session = mongoose.model('Session', sessionSchema);
 
 chai.use(chaiHttp);
 
@@ -56,6 +58,7 @@ describe('Запросы к серверу', function() {
       Note.remove({}).exec(),
       OpenGraph.remove({}).exec(),
       Account.remove({}).exec(),
+      Session.remove({}).exec(),
     ];
 
     Promise.all(commands).then(() => {
@@ -263,8 +266,11 @@ describe('Запросы к серверу', function() {
 
           expect(response.status).to.equal(200);
           expect(response.body.account).to.be.an('object');
+          expect(response.body.account).to.have.a.property('username');
+          expect(response.body.account).to.have.a.property('sessionId');
+          expect(response.body.account).to.not.have.a.property('password');
+          expect(response.body.account).to.not.have.a.property('email');
           expect(response.body.account.username).to.equal('dshster');
-          expect(response.body.account).to.have.a.property('password');
           return done();
         });
     });
@@ -282,7 +288,7 @@ describe('Запросы к серверу', function() {
         .end(error => {
           if (error) return done(error);
 
-          chai.request(server)
+          return chai.request(server)
             .post('/api/account')
             .send(data)
             .end(errorRequest => {
