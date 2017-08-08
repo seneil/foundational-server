@@ -24,6 +24,7 @@
     "mongoose": "^4.11.3",
     "mongoose-unique-validator": "^1.0.5",
     "morgan": "^1.8.2",
+    "nanoid": "^0.1.0",
     "node-metainspector": "git+https://github.com/dshster/node-metainspector.git",
     "path-to-regexp": "^1.7.0"
   },
