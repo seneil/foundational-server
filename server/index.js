@@ -37,11 +37,11 @@ app.listen(app.get('port'), () => {
     case 'test':
       mongoose.connect(config.mongodb.test);
       break;
-    case 'dev':
-      mongoose.connect(config.mongodb.local);
+    case 'production':
+      mongoose.connect(config.mongodb.mlab);
       break;
     default:
-      mongoose.connect(config.mongodb.mlab);
+      mongoose.connect(config.mongodb.local);
       break;
   }
   console.log(`Find the server at: http://localhost:${app.get('port')}/`);
