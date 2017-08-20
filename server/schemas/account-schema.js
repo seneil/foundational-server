@@ -22,18 +22,20 @@ const accountSchema = new Schema({
 
 accountSchema.plugin(uniqueValidator);
 
-accountSchema.statics.secureAccount = function(data, callback) {
-  const { username, email, password } = data;
+accountSchema.statics.secureAccount = function(account) {
+  const { username, email, password } = account;
 
-  bcrypt.hash(password, 10, (error, hash) => {
-    if (error) throw error;
+  return new Promise((resolve, reject) => {
+    bcrypt.hash(password, 10, (error, hash) => {
+      if (error) reject(error);
 
-    callback(new this(Object.assign({
-      username,
-      email,
-    }, {
-      password: hash,
-    })));
+      resolve(new this(Object.assign({
+        username,
+        email,
+      }, {
+        password: hash,
+      })));
+    });
   });
 };
 

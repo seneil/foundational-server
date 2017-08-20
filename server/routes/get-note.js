@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
-const shortID = require('mongodb-short-id');
+
+const ok = require('../constants/server-codes').ok;
+const notFound = require('../constants/server-codes').notFound;
 
 const noteSchema = require('../schemas/note-schema');
 const openGraphSchema = require('../schemas/opengraph-schema');
@@ -10,26 +12,33 @@ const OpenGraph = mongoose.model('OpenGraph', openGraphSchema);
 module.exports = (request, response) => {
   const { name } = request.params;
 
-  try {
-    const id = shortID.shortToObjectID(name);
+  Note.findOne({ name })
+    .then(note => {
+      if (note) {
+        return Promise.all([
+          OpenGraph.find({ hash: { $in: note.attachments.map(attachment => attachment.hash) } }),
+          note,
+        ]);
+      }
 
-    Note.findById(id, (errorNote, note) => {
-      OpenGraph
-        .find({ hash: { $in: note.attachments.map(attachment => attachment.hash) } })
-        .exec((errorOpengraph, opengraphList) => {
-          const document = note.toObject();
+      return Promise.reject(notFound);
+    })
+    .then(([opengraphList, note]) => {
+      const document = note.toObject();
 
-          if (errorOpengraph) throw errorOpengraph;
+      document.attachments.forEach(attachment => {
+        attachment.opengraph = opengraphList.find(opengraph => opengraph.hash === attachment.hash);
+      });
 
-          document.attachments.forEach(attachment => {
-            attachment.opengraph = opengraphList.find(opengraph => opengraph.hash === attachment.hash);
-          });
-
-          response.json({ note: document });
-        });
+      response.json({
+        status: ok,
+        result: {
+          note: document,
+        },
+      });
+    })
+    .catch(error => {
+      response.json({ status: error.errors || error });
     });
-  } catch (error) {
-    response.json({ error: true });
-  }
 };
 
