@@ -8,6 +8,10 @@ const nock = require('nock');
 const mockDocument = require('./mock.document');
 const mockDummyDocument = require('./mock.dummy.document');
 
+const ok = require('../server/constants/server-codes').ok;
+const notFound = require('../server/constants/server-codes').notFound;
+const noValidate = require('../server/constants/server-codes').noValidate;
+
 const server = require('../server');
 
 const noteSchema = require('../server/schemas/note-schema');
@@ -21,6 +25,8 @@ const Account = mongoose.model('Account', accountSchema);
 const Session = mongoose.model('Session', sessionSchema);
 
 chai.use(chaiHttp);
+
+// TODO нужно сделать все ответы с кодом 200 и status: 'ok'
 
 describe('Запросы к серверу', function() {
   beforeEach(function() {
@@ -72,8 +78,13 @@ describe('Запросы к серверу', function() {
         .get('/api/notes')
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          expect(response.body).to.be.an('object');
-          expect(response.body).to.deep.equal({ notes: [], count: 0 });
+          expect(response.body).to.deep.equal({
+            status: ok,
+            result: {
+              notes: [],
+              count: 0,
+            },
+          });
           done();
         });
     });
@@ -82,13 +93,13 @@ describe('Запросы к серверу', function() {
   describe('/GET note/:noteName', function() {
     it('Должна вернуться ошибка ненайденной заметки', function(done) {
       chai.request(server)
-        .get(`/api/notes/note404`)
+        .get('/api/notes/note404')
         .end((error, response) => {
           expect(response.status).to.equal(200);
-          expect(response.body).to.be.an('object');
-          expect(response.body).to.have.a.property('error');
-          expect(response.body).to.deep.equal({ error: true });
-          done();
+          expect(response.body).to.deep.equal({
+            status: notFound,
+          });
+          done(error);
         });
     });
 
@@ -108,15 +119,18 @@ describe('Запросы к серверу', function() {
         return chai.request(server)
           .get(`/api/notes/${note.name}`)
           .end((error, response) => {
+            const { result: { note } } = response.body;
+
             expect(response.status).to.equal(200);
-            expect(response.body).to.be.an('object');
-            expect(response.body.note).to.have.a.property('body');
-            expect(response.body.note.body).to.equal(text);
-            expect(response.body.note.attachments.length)
+            expect(response.body.status).to.equal(ok);
+
+            expect(note).to.have.a.property('body');
+            expect(note.body).to.equal(text);
+            expect(note.attachments.length)
               .to.equal(1);
-            expect(response.body.note.attachments[0].url)
+            expect(note.attachments[0].url)
               .to.equal('http://chaijs.com/api/bdd/');
-            done();
+            done(error);
           });
       });
     });
@@ -131,15 +145,18 @@ describe('Запросы к серверу', function() {
         .post('/api/notes')
         .send({ body: text })
         .end((error, response) => {
+          const { result: { note } } = response.body;
+
           expect(response.status).to.equal(200);
-          expect(response.body).to.be.an('object');
-          expect(response.body.note).to.have.a.property('body');
-          expect(response.body.note.body).to.equal(text);
-          expect(response.body.note.attachments.length)
+          expect(response.body.status).to.equal(ok);
+
+          expect(note).to.have.a.property('body');
+          expect(note.body).to.equal(text);
+          expect(note.attachments.length)
             .to.equal(1);
-          expect(response.body.note.attachments[0].url)
+          expect(note.attachments[0].url)
             .to.equal('https://mlab.com/databases/note-keeper#collections');
-          done();
+          done(error);
         });
     });
 
@@ -156,16 +173,20 @@ describe('Запросы к серверу', function() {
 
           setTimeout(() => {
             chai.request(server)
-              .get(`/api/notes/${response.body.note.name}`)
+              .get(`/api/notes/${response.body.result.note.name}`)
               .end((getError, getResponse) => {
+                const { result: { note } } = getResponse.body;
+
                 expect(getResponse.status).to.equal(200);
-                expect(getResponse.body.note.attachments.length)
+                expect(getResponse.body.status).to.equal(ok);
+
+                expect(note.attachments.length)
                   .to.equal(1);
-                expect(getResponse.body.note.attachments[0].opengraph.title)
+                expect(note.attachments[0].opengraph.title)
                   .to.equal('OpenGraph Title: Scratched document');
-                done();
+                done(error);
               });
-          }, 200);
+          }, 300);
         });
     });
 
@@ -180,18 +201,24 @@ describe('Запросы к серверу', function() {
         .end((error, response) => {
           if (error) done(error);
 
-          chai.request(server)
-            .get(`/api/notes/${response.body.note.name}`)
-            .end((getError, getResponse) => {
-              expect(getResponse.status).to.equal(200);
-              expect(getResponse.body.note.attachments.length)
-                .to.equal(1);
-              expect(getResponse.body.note.attachments[0].opengraph.title)
-                .to.equal('');
-              expect(getResponse.body.note.attachments[0].opengraph.html)
-                .to.equal('<p></p>');
-              done();
-            });
+          setTimeout(() => {
+            chai.request(server)
+              .get(`/api/notes/${response.body.result.note.name}`)
+              .end((getError, getResponse) => {
+                const { result: { note } } = getResponse.body;
+
+                expect(getResponse.status).to.equal(200);
+                expect(getResponse.body.status).to.equal(ok);
+
+                expect(note.attachments.length)
+                  .to.equal(1);
+                expect(note.attachments[0].opengraph.title)
+                  .to.equal('');
+                expect(note.attachments[0].opengraph.html)
+                  .to.equal('<p></p>');
+                done();
+              });
+          }, 300);
         });
     });
 
@@ -208,18 +235,24 @@ describe('Запросы к серверу', function() {
         .end((error, response) => {
           if (error) done(error);
 
-          chai.request(server)
-            .get(`/api/notes/${response.body.note.name}`)
-            .end((getError, getResponse) => {
-              expect(getResponse.status).to.equal(200);
-              expect(getResponse.body.note.attachments.length)
-                .to.equal(2);
-              expect(getResponse.body.note.attachments[0].opengraph.title)
-                .to.equal('OpenGraph Title: Scratched document');
-              expect(getResponse.body.note.attachments[1].opengraph.title)
-                .to.equal('OpenGraph Title: Google template title');
-              done();
-            });
+          setTimeout(() => {
+            chai.request(server)
+              .get(`/api/notes/${response.body.result.note.name}`)
+              .end((getError, getResponse) => {
+                const { result: { note } } = getResponse.body;
+
+                expect(getResponse.status).to.equal(200);
+                expect(getResponse.body.status).to.equal(ok);
+
+                expect(note.attachments.length)
+                  .to.equal(2);
+                expect(note.attachments[0].opengraph.title)
+                  .to.equal('OpenGraph Title: Scratched document');
+                expect(note.attachments[1].opengraph.title)
+                  .to.equal('OpenGraph Title: Google template title');
+                done();
+              });
+          }, 300);
         });
     });
 
@@ -235,14 +268,18 @@ describe('Запросы к серверу', function() {
           if (error) done(error);
 
           chai.request(server)
-            .get(`/api/notes/${response.body.note.name}`)
+            .get(`/api/notes/${response.body.result.note.name}`)
             .end((getError, getResponse) => {
+              const { result: { note } } = getResponse.body;
+
               expect(getResponse.status).to.equal(200);
-              expect(getResponse.body.note.attachments.length)
+              expect(getResponse.body.status).to.equal(ok);
+
+              expect(note.attachments.length)
                 .to.equal(1);
-              expect(getResponse.body.note.attachments[0].opengraph.type)
+              expect(note.attachments[0].opengraph.type)
                 .to.equal('image');
-              expect(getResponse.body.note.attachments[0].opengraph.image)
+              expect(note.attachments[0].opengraph.image)
                 .to.equal('http://example.com/images/example.png');
               done();
             });
@@ -262,16 +299,17 @@ describe('Запросы к серверу', function() {
         .post('/api/account')
         .send(data)
         .end((error, response) => {
-          if (error) return done(error);
+          const { result: { account } } = response.body;
 
           expect(response.status).to.equal(200);
-          expect(response.body.account).to.be.an('object');
-          expect(response.body.account).to.have.a.property('username');
-          expect(response.body.account).to.have.a.property('sessionId');
-          expect(response.body.account).to.not.have.a.property('password');
-          expect(response.body.account).to.not.have.a.property('email');
-          expect(response.body.account.username).to.equal('dshster');
-          return done();
+          expect(response.body.status).to.equal(ok);
+
+          expect(account).to.have.a.property('username');
+          expect(account).to.have.a.property('sessionId');
+          expect(account).to.not.have.a.property('password');
+          expect(account).to.not.have.a.property('email');
+          expect(account.username).to.equal('dshster');
+          return done(error);
         });
     });
 
@@ -291,11 +329,12 @@ describe('Запросы к серверу', function() {
           return chai.request(server)
             .post('/api/account')
             .send(data)
-            .end(errorRequest => {
-              expect(errorRequest.response.status).to.equal(500);
-              expect(errorRequest.response.body).to.be.an('object');
-              expect(errorRequest.response.body.message).to.have.a.property('email');
-              expect(errorRequest.response.body.message).to.have.a.property('username');
+            .end((result, response) => {
+              expect(response.status).to.equal(200);
+              expect(response.body).to.have.a.property('status');
+
+              expect(response.body.status).to.have.a.property('email');
+              expect(response.body.status).to.have.a.property('username');
               return done();
             });
         });
