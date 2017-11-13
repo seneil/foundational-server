@@ -1,0 +1,31 @@
+version: '2'
+services:
+
+  mongo:
+    image: mongo
+    command: mongod --smallfiles
+    volumes:
+      - ./mdb:/data/db
+    ports:
+      - 27017:27017
+    networks:
+      - all
+
+  backend:
+    build: .
+    volumes:
+      - ./:/usr/src/app
+    working_dir: /usr/src/app
+    command: sh -c 'pm2-docker start ecosystem.config.js'
+    ports:
+      - 3001:3001
+    depends_on:
+      - mongo
+    networks:
+      - all
+    environment:
+      NODE_ENV: 'dev'
+      MONGODB_URI: 'mongodb://mongo/note-keeper-db'
+
+networks:
+  all:

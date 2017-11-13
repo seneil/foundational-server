@@ -5,11 +5,9 @@
   "main": "./server/index.js",
   "private": true,
   "scripts": {
-    "start": "bash ./config/bin/server",
     "test:unit": "bash ./config/bin/test-unit",
     "test:unit-cover": "bash ./config/bin/test-unit-cover",
-    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js server",
-    "mdb": "mongod --rest --httpinterface --dbpath ./mdb"
+    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js server"
   },
   "keywords": [],
   "author": "",

@@ -6,8 +6,6 @@ const bodyParser = require('body-parser');
 const app = express();
 const router = express.Router();
 
-const config = require('../config/config');
-
 const postAccount = require('./routes/post-account');
 
 const getNotesRoute = require('./routes/get-notes');
@@ -35,15 +33,16 @@ app.use('/api', router);
 app.listen(app.get('port'), () => {
   switch (process.env.NODE_ENV) {
     case 'test':
-      mongoose.connect(config.mongodb.test);
+      mongoose.connect('mongodb://localhost:27017/note-keeper-test');
       break;
     case 'production':
-      mongoose.connect(config.mongodb.mlab);
+      mongoose.connect(process.env.MONGODB_URI);
       break;
     default:
-      mongoose.connect(config.mongodb.local);
+      mongoose.connect(process.env.MONGODB_URI);
       break;
   }
+
   console.log(`Find the server at: http://localhost:${app.get('port')}/`);
 });
 
