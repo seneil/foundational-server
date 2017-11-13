@@ -1,6 +1,6 @@
 const Schema = require('mongoose').Schema;
 const uniqueValidator = require('mongoose-unique-validator');
-const bcrypt = require('bcrypt');
+const sha256 = require('crypto-js/sha256');
 
 const accountSchema = new Schema({
   username: {
@@ -25,17 +25,13 @@ accountSchema.plugin(uniqueValidator);
 accountSchema.statics.secureAccount = function(account) {
   const { username, email, password } = account;
 
-  return new Promise((resolve, reject) => {
-    bcrypt.hash(password, 10, (error, hash) => {
-      if (error) reject(error);
-
-      resolve(new this(Object.assign({
-        username,
-        email,
-      }, {
-        password: hash,
-      })));
-    });
+  return new Promise(resolve => {
+    resolve(new this(Object.assign({
+      username,
+      email,
+    }, {
+      password: sha256(password).toString(),
+    })));
   });
 };
 

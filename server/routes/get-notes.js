@@ -39,7 +39,7 @@ module.exports = (request, response) => {
       response.json({
         status: ok,
         result: {
-          notes: documents, count: documents.length
+          notes: documents, count: documents.length,
         },
       });
     })
