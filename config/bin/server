@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 WORKING_DIRECTORY=`pwd`
-NODE_ENV=dev node $WORKING_DIRECTORY/server
+NODE_ENV=development MONGODB_URI='mongodb://localhost:27017/note-keeper-scratch' nodemon $WORKING_DIRECTORY/application
