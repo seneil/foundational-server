@@ -5,18 +5,16 @@
   "main": "./server/index.js",
   "private": true,
   "scripts": {
-    "start": "bash ./config/bin/server",
     "test:unit": "bash ./config/bin/test-unit",
     "test:unit-cover": "bash ./config/bin/test-unit-cover",
-    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js server",
-    "mdb": "mongod --rest --httpinterface --dbpath ./mdb"
+    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js server"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^1.0.2",
     "body-parser": "^1.17.2",
+    "crypto-js": "^3.1.9-1",
     "express": "^4.15.3",
     "html-to-json": "^0.6.0",
     "jsonfile": "^3.0.1",
