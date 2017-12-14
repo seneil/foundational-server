@@ -15,16 +15,16 @@ app.use('/api', router);
 mongoose.Promise = global.Promise;
 
 app.listen(app.get('port'), () => {
-  switch (process.env.NODE_ENV) {
-    case 'test':
-      mongoose.connect('mongodb://localhost:27017/note-keeper-test');
-      break;
-    case 'production':
-      mongoose.connect(process.env.MONGODB_URI);
-      break;
-    default:
-      mongoose.connect(process.env.MONGODB_URI);
-      break;
+  if (process.env.MONGODB_URI) {
+    const promise = mongoose.createConnection(process.env.MONGODB_URI, {
+      useMongoClient: true,
+    });
+
+    promise.then(db => {
+      const { host, port, name } = db;
+
+      console.log(`MongoDB connected to: mongodb://${host}:${port}/${name}`);
+    });
   }
 
   console.log(`Find the server at: http://localhost:${app.get('port')}/`);
