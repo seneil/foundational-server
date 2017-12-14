@@ -2,12 +2,12 @@
   "name": "note-keeper-server",
   "version": "1.0.0",
   "description": "",
-  "main": "./server/index.js",
+  "main": "./application/index.js",
   "private": true,
   "scripts": {
     "test:unit": "bash ./config/bin/test-unit",
     "test:unit-cover": "bash ./config/bin/test-unit-cover",
-    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js server"
+    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application"
   },
   "keywords": [],
   "author": "",

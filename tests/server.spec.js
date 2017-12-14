@@ -12,12 +12,12 @@ const ok = require('../server/constants/server-codes').ok;
 const notFound = require('../server/constants/server-codes').notFound;
 const noValidate = require('../server/constants/server-codes').noValidate;
 
-const server = require('../server');
+const server = require('../application');
 
-const noteSchema = require('../server/schemas/note-schema');
-const openGraphSchema = require('../server/schemas/opengraph-schema');
-const accountSchema = require('../server/schemas/account-schema');
-const sessionSchema = require('../server/schemas/session-schema');
+const noteSchema = require('../application/schemas/note-schema');
+const openGraphSchema = require('../application/schemas/opengraph-schema');
+const accountSchema = require('../application/schemas/account-schema');
+const sessionSchema = require('../application/schemas/session-schema');
 
 const Note = mongoose.model('Note', noteSchema);
 const OpenGraph = mongoose.model('OpenGraph', openGraphSchema);
