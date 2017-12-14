@@ -4,31 +4,15 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
 const app = express();
-const router = express.Router();
-
-const postAccount = require('./routes/post-account');
-
-const getNotesRoute = require('./routes/get-notes');
-const getNoteRoute = require('./routes/get-note');
-const postNoteRoute = require('./routes/post-note');
-
-mongoose.Promise = global.Promise;
-
-router.route('/notes').get(getNotesRoute);
-router.route('/notes/:name').get(getNoteRoute);
-router.route('/notes').post(postNoteRoute);
-router.route('/account').post(postAccount);
-
-router.use((request, response, next) => {
-  request.moderated = false;
-  next();
-});
+const router = require('./router');
 
 app.set('port', (process.env.PORT || 3001));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'test' ? 'dev' : 'combined'));
 app.use('/api', router);
+
+mongoose.Promise = global.Promise;
 
 app.listen(app.get('port'), () => {
   switch (process.env.NODE_ENV) {

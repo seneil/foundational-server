@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 
-const ok = require('../constants/server-codes').ok;
+const ok = require('../../../constants/server-codes').ok;
 
-const noteSchema = require('../schemas/note-schema');
-const openGraphSchema = require('../schemas/opengraph-schema');
+const noteSchema = require('../../../schemas/note-schema');
+const openGraphSchema = require('../../../schemas/opengraph-schema');
 
 const Note = mongoose.model('Note', noteSchema);
 const OpenGraph = mongoose.model('OpenGraph', openGraphSchema);

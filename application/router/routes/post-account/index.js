@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
 
-const ok = require('../constants/server-codes').ok;
-const noValidate = require('../constants/server-codes').noValidate;
+const ok = require('../../../constants/server-codes').ok;
+const noValidate = require('../../../constants/server-codes').noValidate;
 
-const accountSchema = require('../schemas/account-schema');
-const sessionSchema = require('../schemas/session-schema');
+const accountSchema = require('../../../schemas/account-schema');
+const sessionSchema = require('../../../schemas/session-schema');
 
 const Account = mongoose.model('Account', accountSchema);
 const Session = mongoose.model('Session', sessionSchema);
