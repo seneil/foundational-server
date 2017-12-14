@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-const ok = require('../../../constants/server-codes').ok;
-const noValidate = require('../../../constants/server-codes').noValidate;
+const { OK, NO_VALIDATE } = require('../../constants/answer-codes');
 
 const accountSchema = require('../../../schemas/account-schema');
 const sessionSchema = require('../../../schemas/session-schema');
@@ -14,7 +13,7 @@ module.exports = (request, response) => {
     .then(account => {
       const validate = account.validateSync();
 
-      if (validate) return Promise.reject(noValidate);
+      if (validate) return Promise.reject(NO_VALIDATE);
 
       return account.save();
     })
@@ -32,7 +31,7 @@ module.exports = (request, response) => {
     })
     .then(([account, session]) => {
       response.status(200).json({
-        status: ok,
+        status: OK,
         result: {
           account: {
             username: account.username,

@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ok = require('../../../constants/server-codes').ok;
+const { OK } = require('../../constants/answer-codes');
 
 const noteSchema = require('../../../schemas/note-schema');
 const openGraphSchema = require('../../../schemas/opengraph-schema');
@@ -37,7 +37,7 @@ module.exports = (request, response) => {
       });
 
       response.json({
-        status: ok,
+        status: OK,
         result: {
           notes: documents, count: documents.length,
         },

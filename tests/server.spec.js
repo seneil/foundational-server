@@ -8,9 +8,7 @@ const nock = require('nock');
 const mockDocument = require('./mock.document');
 const mockDummyDocument = require('./mock.dummy.document');
 
-const ok = require('../server/constants/server-codes').ok;
-const notFound = require('../server/constants/server-codes').notFound;
-const noValidate = require('../server/constants/server-codes').noValidate;
+const { OK, NOT_FOUND } = require('../application/router/constants/answer-codes');
 
 const server = require('../application');
 
@@ -79,7 +77,7 @@ describe('Запросы к серверу', function() {
         .end((error, response) => {
           expect(response.status).to.equal(200);
           expect(response.body).to.deep.equal({
-            status: ok,
+            status: OK,
             result: {
               notes: [],
               count: 0,
@@ -97,7 +95,7 @@ describe('Запросы к серверу', function() {
         .end((error, response) => {
           expect(response.status).to.equal(200);
           expect(response.body).to.deep.equal({
-            status: notFound,
+            status: NOT_FOUND,
           });
           done(error);
         });
@@ -122,7 +120,7 @@ describe('Запросы к серверу', function() {
             const { result: { note } } = response.body;
 
             expect(response.status).to.equal(200);
-            expect(response.body.status).to.equal(ok);
+            expect(response.body.status).to.equal(OK);
 
             expect(note).to.have.a.property('body');
             expect(note.body).to.equal(text);
@@ -148,7 +146,7 @@ describe('Запросы к серверу', function() {
           const { result: { note } } = response.body;
 
           expect(response.status).to.equal(200);
-          expect(response.body.status).to.equal(ok);
+          expect(response.body.status).to.equal(OK);
 
           expect(note).to.have.a.property('body');
           expect(note.body).to.equal(text);
@@ -178,7 +176,7 @@ describe('Запросы к серверу', function() {
                 const { result: { note } } = getResponse.body;
 
                 expect(getResponse.status).to.equal(200);
-                expect(getResponse.body.status).to.equal(ok);
+                expect(getResponse.body.status).to.equal(OK);
 
                 expect(note.attachments.length)
                   .to.equal(1);
@@ -208,7 +206,7 @@ describe('Запросы к серверу', function() {
                 const { result: { note } } = getResponse.body;
 
                 expect(getResponse.status).to.equal(200);
-                expect(getResponse.body.status).to.equal(ok);
+                expect(getResponse.body.status).to.equal(OK);
 
                 expect(note.attachments.length)
                   .to.equal(1);
@@ -242,7 +240,7 @@ describe('Запросы к серверу', function() {
                 const { result: { note } } = getResponse.body;
 
                 expect(getResponse.status).to.equal(200);
-                expect(getResponse.body.status).to.equal(ok);
+                expect(getResponse.body.status).to.equal(OK);
 
                 expect(note.attachments.length)
                   .to.equal(2);
@@ -273,7 +271,7 @@ describe('Запросы к серверу', function() {
               const { result: { note } } = getResponse.body;
 
               expect(getResponse.status).to.equal(200);
-              expect(getResponse.body.status).to.equal(ok);
+              expect(getResponse.body.status).to.equal(OK);
 
               expect(note.attachments.length)
                 .to.equal(1);
@@ -302,7 +300,7 @@ describe('Запросы к серверу', function() {
           const { result: { account } } = response.body;
 
           expect(response.status).to.equal(200);
-          expect(response.body.status).to.equal(ok);
+          expect(response.body.status).to.equal(OK);
 
           expect(account).to.have.a.property('username');
           expect(account).to.have.a.property('sessionId');

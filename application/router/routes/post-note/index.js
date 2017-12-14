@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const shortID = require('mongodb-short-id');
 
-const ok = require('../../../constants/server-codes').ok;
+const { OK } = require('../../constants/answer-codes');
 
 const scrapeUrl = require('../../../scripts/scrape-url');
 
@@ -53,7 +53,7 @@ module.exports = (request, response) => {
     })]))
     .then(([noteData]) => {
       response.status(200).json({
-        status: ok,
+        status: OK,
         result: {
           note: noteData,
         },

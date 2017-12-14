@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
-const ok = require('../../../constants/server-codes').ok;
-const notFound = require('../../../constants/server-codes').notFound;
+const { OK, NOT_FOUND } = require('../../constants/answer-codes');
 
 const noteSchema = require('../../../schemas/note-schema');
 const openGraphSchema = require('../../../schemas/opengraph-schema');
@@ -21,7 +20,7 @@ module.exports = (request, response) => {
         ]);
       }
 
-      return Promise.reject(notFound);
+      return Promise.reject(NOT_FOUND);
     })
     .then(([opengraphList, note]) => {
       const document = note.toObject();
@@ -31,7 +30,7 @@ module.exports = (request, response) => {
       });
 
       response.json({
-        status: ok,
+        status: OK,
         result: {
           note: document,
         },
