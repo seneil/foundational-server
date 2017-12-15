@@ -5,16 +5,20 @@ const noteSchema = require('../../../schemas/note.schema');
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = (request, response) => {
-  const { name } = request.params;
+  const { limit = 10, skip = 0 } = request.query;
+  const { keyword } = request.params;
 
-  const action = Note.findOne({ name });
+  const action = Note.find({ 'keywords.title': keyword }).skip(Number(skip)).limit(Number(limit));
 
   action
-    .then(note => {
-      if (note) {
+    .then(notes => {
+      if (notes.length) {
         return response.status(200).json({
           status: OK,
-          result: { note },
+          result: {
+            notes,
+            length: notes.length,
+          },
         });
       }
 
@@ -24,4 +28,3 @@ module.exports = (request, response) => {
       response.status(500).json({ status: error.errors || error });
     });
 };
-

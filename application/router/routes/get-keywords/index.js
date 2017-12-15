@@ -5,16 +5,14 @@ const noteSchema = require('../../../schemas/note.schema');
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = (request, response) => {
-  const { limit = 10, skip = 0 } = request.query;
-
-  const action = Note.find().sort({ datetime: -1 }).skip(Number(skip)).limit(Number(limit));
+  const action = Note.distinct('keywords.title');
 
   action
-    .then(notes => response.status(200).json({
+    .then(keywords => response.status(200).json({
       status: OK,
       result: {
-        notes,
-        length: notes.length,
+        keywords,
+        length: keywords.length,
       },
     }))
     .catch(error => {

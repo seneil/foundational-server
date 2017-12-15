@@ -1,15 +1,20 @@
 const express = require('express');
+
 const router = express.Router();
 
-const postAccount = require('./routes/post-account');
-const getNotesRoute = require('./routes/get-notes');
-const getNoteRoute = require('./routes/get-note');
-const postNoteRoute = require('./routes/post-note');
+// const postAccount = require('./routes/post-account');
+const getNotes = require('./routes/get-notes');
+const getNote = require('./routes/get-note');
+const getKeywords = require('./routes/get-keywords');
+const getKeyword = require('./routes/get-keyword');
+// const postNote = require('./routes/post-note');
 
-router.route('/v1/notes').get(getNotesRoute);
-router.route('/v1/notes/:name').get(getNoteRoute);
-router.route('/v1/notes').post(postNoteRoute);
-router.route('/v1/account').post(postAccount);
+router.route('/v1/notes').get(getNotes);
+router.route('/v1/notes/:name').get(getNote);
+router.route('/v1/keywords').get(getKeywords);
+router.route('/v1/keywords/:keyword').get(getKeyword);
+// router.route('/v1/notes').post(postNote);
+// router.route('/v1/account').post(postAccount);
 
 router.use((request, response, next) => {
   request.moderated = false;
