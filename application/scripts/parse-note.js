@@ -1,7 +1,7 @@
 module.exports = function(note) {
   const urlRegexp = /([--:\w?@%&+~#=]*\.[a-z]{2,4}\/{0,2})((?:[?&](?:\w+)=(?:\w+))+|[--:\w?@%&+~#=]+)?/g;
   const emailRegexp = /[a-z0-9]+[_a-z0-9.-]*[a-z0-9]+@[a-z0-9-]+(\.[a-z0-9-]+)*(\.[a-z]{2,4})/g;
-  const hashtagRegexp = /(?:^|\s)(?:#+)([a-z]+)(?![#a-z])/ig;
+  const keywordRegexp = /(?:^|\s)(?:#+)([a-zA-Zа-яА-ЯЁё]+)(?![#a-zA-Zа-яА-ЯЁё])/ig;
   const transformations = [{
     regexp: /^(https?:\/\/vk.com\/)feed(\?w=)(wall-[0-9_]+)$/gi,
     replace: '$1$3',
@@ -10,14 +10,14 @@ module.exports = function(note) {
     replace: '$1$2$4',
   }];
 
-  const assets = { hashtags: [], emails: [], urls: [] };
+  const assets = { keywords: [], emails: [], urls: [] };
 
   note
-    .replace(hashtagRegexp, hashtag => {
-      const hashtagWord = hashtag.trim().replace(/^#+/, '');
+    .replace(keywordRegexp, keyword => {
+      const keywordItem = keyword.trim().replace(/^#+/, '');
 
-      if (!assets.hashtags.includes(hashtagWord)) {
-        assets.hashtags.push(hashtagWord);
+      if (!assets.keywords.includes(keywordItem)) {
+        assets.keywords.push(keywordItem);
       }
 
       return '';
@@ -45,10 +45,6 @@ module.exports = function(note) {
 
       return '';
     });
-
-  assets.html = note
-    ? `<p>${note.replace(/\n([\s\t]*\n)/g, '</p><p>').replace(/\n/g, '<br />')}</p>`
-    : '';
 
   return assets;
 };
