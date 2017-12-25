@@ -5,22 +5,21 @@
   "main": "./application/index.js",
   "private": true,
   "scripts": {
-    "test:unit": "bash ./config/bin/test-unit",
-    "test:unit-cover": "bash ./config/bin/test-unit-cover",
-    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application"
+    "test": "bash ./config/bin/test-jest",
+    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application tests"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "body-parser": "^1.18.2",
-    "crypto-js": "^3.1.9-1",
-    "express": "^4.16.2",
-    "mongodb-short-id": "^0.3.2",
-    "mongoose": "^4.13.7",
-    "mongoose-unique-validator": "^1.0.6",
-    "morgan": "^1.9.0",
-    "nanoid": "^0.1.1",
+    "body-parser": "1.18.2",
+    "crypto-js": "3.1.9-1",
+    "express": "4.16.2",
+    "mongoose": "4.13.7",
+    "mongoose-paginate": "5.0.3",
+    "mongoose-unique-validator": "1.0.6",
+    "morgan": "1.9.0",
+    "nanoid": "0.1.1",
     "node-metainspector": "git+https://github.com/dshster/node-metainspector.git"
   },
   "engines": {
@@ -28,15 +27,13 @@
     "npm": ">=4.0"
   },
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-http": "^3.0.0",
-    "eslint": "^3.19.0",
-    "eslint-config-airbnb": "^15.1.0",
-    "eslint-plugin-import": "^2.8.0",
-    "eslint-plugin-jsx-a11y": "^5.1.1",
-    "eslint-plugin-react": "^7.5.1",
-    "mocha": "^3.5.3",
-    "nock": "^9.1.4",
-    "nyc": "^11.4.1"
+    "eslint": "3.19.0",
+    "eslint-config-airbnb": "15.1.0",
+    "eslint-plugin-import": "2.8.0",
+    "eslint-plugin-jsx-a11y": "5.1.1",
+    "eslint-plugin-react": "7.5.1",
+    "jest": "22.0.3",
+    "nock": "9.1.5",
+    "supertest": "3.0.0"
   }
 }

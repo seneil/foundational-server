@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+NODE_ENV=test MONGODB_URI='mongodb://localhost:27017/note-keeper-test' `pwd`/node_modules/.bin/jest `pwd`/tests/*.test.js --config jest.config.js
