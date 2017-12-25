@@ -1,7 +1,10 @@
 const Schema = require('mongoose').Schema;
 
 const attachmentSchema = new Schema({
-  url: String,
+  url: {
+    type: String,
+    required: true,
+  },
   title: String,
   ogTitle: String,
   description: String,

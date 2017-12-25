@@ -7,14 +7,13 @@ const Note = mongoose.model('Note', noteSchema);
 module.exports = (request, response) => {
   const { name } = request.params;
 
-  const action = Note.findOne({ name });
+  const action = Note.remove({ name });
 
   action
     .then(result => {
-      if (result) {
+      if (result.result.n) {
         return response.status(200).json({
           status: OK,
-          result,
         });
       }
 
@@ -24,4 +23,3 @@ module.exports = (request, response) => {
       response.status(200).json({ status: error.errors || error });
     });
 };
-

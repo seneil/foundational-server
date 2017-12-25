@@ -16,6 +16,6 @@ module.exports = (request, response) => {
       },
     }))
     .catch(error => {
-      response.status(500).json({ status: error.errors || error });
+      response.status(200).json({ status: error.errors || error });
     });
 };

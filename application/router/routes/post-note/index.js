@@ -1,66 +1,101 @@
-// const mongoose = require('mongoose');
-// const shortID = require('mongodb-short-id');
-//
-// const { OK } = require('../../constants/answer-codes');
-//
-// const scrapeUrl = require('../../../scripts/scrape-url');
-//
-// const noteSchema = require('../../../schemas/note.schema');
-//
-// const Note = mongoose.model('Note', noteSchema);
-// const OpenGraph = mongoose.model('OpenGraph', openGraphSchema);
-//
-// module.exports = (request, response) => {
-//   const { body } = request.body;
-//
-//   response.status(201).json({ status: OK });
-//
-//   if (!body || !body.length) {
-//     return response.status(500).json({ error: true });
-//   }
-//
-//   const note = Note.parseNote({ body });
-//
-//   note.name = shortID.objectIDtoShort(note._id);
-//
-//   return note.save()
-//     .then(noteData => Promise.all([
-//       noteData,
-//       noteData.attachments.map(attachment => {
-//         const { url, hash } = attachment;
-//
-//         return Promise.all([hash, scrapeUrl(url)]);
-//       }),
-//     ]))
-//     .then(([noteData, attachmentsPromises]) => Promise.all([noteData, Promise.all(attachmentsPromises)]))
-//     .then(([noteData, attachments]) => Promise.all([noteData, attachments, OpenGraph.find({
-//       hash: {
-//         $in: attachments.map(attachment => {
-//           const [hash] = attachment;
-//
-//           return hash;
-//         }),
-//       },
-//     })]))
-//     .then(([noteData, attachments, documents]) => Promise.all([noteData, attachments.filter(attachment => {
-//       const [hash] = attachment;
-//
-//       return !documents.map(document => document.hash).includes(hash);
-//     }).map(attachment => {
-//       const [hash, metadata] = attachment;
-//       const openGraphModel = new OpenGraph(Object.assign(metadata, { hash }));
-//
-//       return openGraphModel.save();
-//     })]))
-//     .then(([noteData]) => {
-//       response.status(200).json({
-//         status: OK,
-//         result: {
-//           note: noteData,
-//         },
-//       });
-//     })
-//     .catch(error => {
-//       response.status(500).json({ status: error.errors || error });
-//     });
-// };
+const mongoose = require('mongoose');
+const { OK, ERROR, NOT_FOUND, NO_VALIDATE } = require('../../constants/answer-codes');
+
+const parseNote = require('../../../scripts/parse-note');
+const scrapeUrl = require('../../../scripts/scrape-url');
+
+const noteSchema = require('../../../schemas/note.schema');
+const attachmentSchema = require('../../../schemas/attachment.schema');
+
+const Note = mongoose.model('Note', noteSchema);
+const Attachment = mongoose.model('Attachment', attachmentSchema);
+
+const scrapeUrls = iterator => {
+  const scrape = () => {
+    const { value, done } = iterator.next();
+
+    if (!done) {
+      const [url] = value;
+
+      Note
+        .findOne({
+          attachments: {
+            $elemMatch: {
+              url: { $eq: url },
+              title: { $exists: false },
+            },
+          },
+        })
+        .then(note => {
+          if (note) {
+            return Promise.all([note, scrapeUrl(url)]);
+          }
+
+          return Promise.reject({
+            status: NOT_FOUND,
+            result: { url },
+          });
+        })
+        .then(([note, scraped]) => Note
+          .updateOne({
+            _id: note._id, 'attachments.url': url,
+          }, {
+            $set: {
+              'attachments.$': new Attachment({ url, ...scraped }),
+            },
+          }))
+        .then(result => {
+          console.log(`Update attachment: ${url}`, { result });
+          scrape();
+        })
+        .catch(error => {
+          console.log({ error });
+          scrape();
+        });
+    }
+  };
+
+  scrape();
+};
+
+module.exports = (request, response) => {
+  const { body } = request.body;
+
+  if (!body) {
+    return response.status(200).json({ status: NO_VALIDATE });
+  }
+
+  const noteData = parseNote(body);
+  const note = Note.createNote(body, noteData);
+  const invalid = note.validateSync();
+
+  if (invalid) {
+    const { errors } = invalid;
+
+    return response.status(200).json({
+      status: NO_VALIDATE,
+      result: Object.values(errors).map(error => error.message),
+    });
+  }
+
+  return note
+    .save()
+    .then(result => {
+      if (note.attachments.length) {
+        const attachmentsIterator = note.attachments
+          .reduce((list, attachment) => list.add(attachment.url), new Set())
+          .entries();
+
+        scrapeUrls(attachmentsIterator);
+      }
+
+      response.status(200).json({
+        status: OK,
+        result,
+      });
+    })
+    .catch(error => response.status(200).json({
+      status: ERROR,
+      result: error,
+    }));
+};

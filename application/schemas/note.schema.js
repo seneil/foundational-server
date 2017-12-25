@@ -1,12 +1,16 @@
-// const crypto = require('crypto');
-const Schema = require('mongoose').Schema;
-// const uniqueValidator = require('mongoose-unique-validator');
+const mongoose = require('mongoose');
+const generate = require('nanoid/generate');
+const uniqueValidator = require('mongoose-unique-validator');
+
+const Schema = mongoose.Schema;
 
 const attachmentSchema = require('./attachment.schema');
 const emailSchema = require('./email.schema');
 const tagSchema = require('./tag.schema');
 
-// const parseNote = require('../scripts/parse-note');
+const Tag = mongoose.model('Tag', tagSchema);
+const Email = mongoose.model('Email', emailSchema);
+const Attachment = mongoose.model('Attachment', attachmentSchema);
 
 const noteSchema = new Schema({
   name: {
@@ -27,7 +31,10 @@ const noteSchema = new Schema({
   keywords: [tagSchema],
   emails: [emailSchema],
   attachments: [attachmentSchema],
-  account: Schema.Types.ObjectId,
+  account: {
+    type: Schema.Types.ObjectId,
+    required: true,
+  },
   public: {
     type: Boolean,
     default: false,
@@ -38,24 +45,19 @@ const noteSchema = new Schema({
   },
 });
 
-// noteSchema.plugin(uniqueValidator);
+noteSchema.plugin(uniqueValidator);
 
-// noteSchema.statics.parseNote = function(data) {
-//   const { html, emails, urls, hashtags } = parseNote(data.body);
-//
-//   return new this(Object.assign(data, {
-//     html,
-//     hashtags: hashtags.map(hashtag => ({ title: hashtag })),
-//     emails: emails.map(email => ({ email })),
-//     attachments: urls.map(url => {
-//       const hash = crypto.createHash('md5');
-//
-//       return {
-//         url,
-//         hash: hash.update(url).digest('hex'),
-//       };
-//     }),
-//   }));
-// };
+noteSchema.statics.createNote = function(body, data) {
+  const { emails, urls, keywords } = data;
+
+  return new this({
+    name: generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@', 10),
+    body,
+    account: '5a270a496d87db18200d0c2a',
+    keywords: keywords.map(keyword => new Tag({ title: keyword })),
+    emails: emails.map(email => new Email({ email })),
+    attachments: urls.map(url => new Attachment({ url: url.replace(/\/$/, '') })),
+  });
+};
 
 module.exports = noteSchema;

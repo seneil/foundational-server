@@ -1,30 +1,31 @@
 const mongoose = require('mongoose');
+const mongoosePaginate = require('mongoose-paginate');
+
 const { OK, NOT_FOUND } = require('../../constants/answer-codes');
 const noteSchema = require('../../../schemas/note.schema');
+
+noteSchema.plugin(mongoosePaginate);
 
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = (request, response) => {
-  const { limit = 10, skip = 0 } = request.query;
+  const { limit = 10, offset = 0 } = request.query;
   const { keyword } = request.params;
 
-  const action = Note.find({ 'keywords.title': keyword }).skip(Number(skip)).limit(Number(limit));
+  Note.paginate({ 'keywords.title': keyword }, { datetime: -1, limit: Number(limit), offset: Number(offset) })
+    .then(result => {
+      const { docs, total } = result;
 
-  action
-    .then(notes => {
-      if (notes.length) {
+      if (docs.length) {
         return response.status(200).json({
           status: OK,
-          result: {
-            notes,
-            length: notes.length,
-          },
+          result: { notes: docs, total, limit, offset },
         });
       }
 
       return Promise.reject(NOT_FOUND);
     })
     .catch(error => {
-      response.status(500).json({ status: error.errors || error });
+      response.status(200).json({ status: error.errors || error });
     });
 };
