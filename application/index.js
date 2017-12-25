@@ -1,5 +1,4 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 
@@ -12,20 +11,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'test' ? 'dev' : 'combined'));
 app.use('/api', router);
 
-mongoose.Promise = global.Promise;
-
 app.listen(app.get('port'), () => {
-  if (process.env.MONGODB_URI) {
-    const promise = mongoose.createConnection(process.env.MONGODB_URI, {
-      useMongoClient: true,
-    });
-
-    promise.then(db => {
-      const { host, port, name } = db;
-
-      console.log(`MongoDB connected to: mongodb://${host}:${port}/${name}`);
-    });
-  }
+  if (process.env.MONGODB_URI) require('./db');
 
   console.log(`Find the server at: http://localhost:${app.get('port')}/`);
 });
