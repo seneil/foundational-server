@@ -10,7 +10,7 @@ module.exports = function(title) {
 
       <meta property="og:title" content="OpenGraph Title: ${title}" />
       <meta property="og:description" content="OpenGraph Description" />
-      <meta property="og:image" content="OpenGraph Image" />
+      <meta property="og:image" content="http://example.com/images/example.png" />
 
       <title>${title}</title>
     </head>

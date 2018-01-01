@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-
-WORKING_DIRECTORY=`pwd`
-NODE_ENV=test $WORKING_DIRECTORY/node_modules/.bin/mocha $WORKING_DIRECTORY/tests/*.spec.js

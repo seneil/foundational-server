@@ -1,35 +1,16 @@
 {
   "extends": "airbnb",
   "globals": {
-    "React": true,
-    "Component": true,
-    "PropTypes": true,
-    "ReactDOM": true,
-    "browserHistory": true,
-    "Router": true,
-    "Route": true,
-    "IndexRoute": true,
-    "Provider": true,
-    "createStore": true,
-    "applyMiddleware": true,
-    "useRouterHistory": true,
-    "createHistory": true,
-    "fetch": true,
-    "thunkMiddleware": true,
     "describe": true,
     "expect": true,
+    "afterAll": true,
+    "beforeAll": true,
     "beforeEach": true,
-    "it": true,
-    "APPLICATION_VERSION": true,
-    "BUILD_TIMESTAMP": true,
-    "APPLICATION_ENVIRONMENT": true,
-    "GIT_COMMIT": true,
-    "ENV": true
+    "it": true
   },
   "parserOptions": {
-    "ecmaVersion": 6,
+    "ecmaVersion": 8,
     "ecmaFeatures": {
-      "jsx": true,
       "experimentalObjectRestSpread": true
     }
   },

@@ -2,25 +2,30 @@ const MetaInspector = require('node-metainspector');
 
 module.exports = function(href) {
   return new Promise((resolve, reject) => {
-    const client = new MetaInspector(href, { timeout: 1500 });
+    const client = new MetaInspector(href, { timeout: 5500 });
 
     client.on('fetch', () => {
       const {
         response: { headers },
         url,
-        title = '',
+        title,
         ogTitle,
-        description = '',
+        description,
         ogDescription,
-        image = '',
+        ogLocale,
+        charset,
+        image,
         ogType,
       } = client;
 
       if (headers['content-type'].includes('text/html')) {
         return resolve({
-          title: ogTitle || title,
-          description: ogDescription || description,
-          html: `<p>${(ogDescription || description).replace(/\n([\s\t]*\n)/g, '</p><p>').replace(/\n/g, '<br />')}</p>`,
+          title,
+          ogTitle,
+          description,
+          ogDescription,
+          ogLocale,
+          charset,
           type: ogType,
           image,
         });
