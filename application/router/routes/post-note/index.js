@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { OK, ERROR, NOT_FOUND, NO_VALIDATE } = require('../../constants/answer-codes');
+const { OK, ERROR, NOT_FOUND, NO_VALIDATE, NO_ACCESS } = require('../../constants/answer-codes');
+const { WRITE_PRIVILEGES } = require('../../constants');
 
 const parseNote = require('../../../scripts/parse-note');
 const scrapeUrl = require('../../../scripts/scrape-url');
@@ -59,10 +60,14 @@ const scrapeUrls = iterator => {
 };
 
 module.exports = (request, response) => {
-  const { body } = request.body;
+  const { body: { body }, user: { privilege } } = request;
 
   if (!body) {
     return response.status(200).json({ status: NO_VALIDATE });
+  }
+
+  if (!WRITE_PRIVILEGES.includes(privilege)) {
+    return response.status(200).json({ status: NO_ACCESS });
   }
 
   const noteData = parseNote(body);

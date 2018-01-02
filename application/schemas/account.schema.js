@@ -36,7 +36,7 @@ const accountSchema = new Schema({
   privilege: {
     type: String,
     enum: ['reader', 'writer', 'manager', 'owner'],
-    default: 'reader',
+    default: 'manager',
   },
   registered: {
     type: Date,

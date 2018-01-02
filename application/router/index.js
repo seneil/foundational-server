@@ -15,11 +15,10 @@ const profile = require('./accounts/profile');
 
 router.route('/v1/notes').get(getNotes);
 router.route('/v1/notes/:name').get(getNote);
-router.route('/v1/notes/:name').delete(deleteNote);
 router.route('/v1/keywords').get(getKeywords);
 router.route('/v1/keywords/:keyword').get(getKeyword);
-router.route('/v1/notes').post(postNote);
-router.route('/v1/notes/:name').delete(deleteNote);
+router.route('/v1/notes').post(passport.authenticate('jwt', { session: false }), postNote);
+router.route('/v1/notes/:name').delete(passport.authenticate('jwt', { session: false }), deleteNote);
 
 router.route('/v1/signup').post(signup);
 router.route('/v1/login').post(login);
