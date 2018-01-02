@@ -3,4 +3,5 @@ module.exports = {
   ERROR: 'error',
   NOT_FOUND: 'notFound',
   NO_VALIDATE: 'noValidate',
+  UNAUTHORIZED: 'Unauthorized',
 };
