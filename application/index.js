@@ -1,11 +1,14 @@
 const express = require('express');
 const morgan = require('morgan');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
 
 const app = express();
 const router = require('./router');
 
-app.set('port', (process.env.PORT || 3001));
+app.set('port', process.env.PORT);
+app.use(helmet());
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan(process.env.NODE_ENV === 'test' ? 'dev' : 'combined'));

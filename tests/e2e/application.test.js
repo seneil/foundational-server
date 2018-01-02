@@ -4,12 +4,44 @@ const request = require('supertest');
 const mockDocument = require('./mock.document');
 const mockDummyDocument = require('./mock.dummy.document');
 
-const { OK, NOT_FOUND } = require('../application/router/constants/answer-codes');
+const { OK, NOT_FOUND } = require('../../application/router/constants/answer-codes');
 
-const db = mongoose.connection;
-const application = require('../application');
+let db;
+let token;
+let application;
+
+const getCredentials = () => ({
+  username: `test${+new Date()}`,
+  email: `test${+new Date()}@example.ru`,
+  password: '-=test-password=-',
+});
+
+const signupAccount = (credentials = getCredentials()) =>
+  request(application)
+    .post('/api/v1/signup')
+    .send(credentials)
+    .expect(200);
 
 describe('Запросы к серверу', () => {
+  beforeAll(done => {
+    db = mongoose.connection;
+    application = require('../../application/index');
+
+    signupAccount()
+      .then(response => {
+        const { body: { status, result } } = response;
+
+        expect(status).toBe(OK);
+        token = result.token;
+        done();
+      });
+  });
+
+  afterAll(done => {
+    db.close();
+    application.close(done);
+  });
+
   beforeEach(done => {
     nock('http://example.com')
       .defaultReplyHeaders({
@@ -78,6 +110,7 @@ describe('Запросы к серверу', () => {
 
       request(application)
         .post('/api/v1/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send({ body: text })
         .expect(200)
         .then(() => {
@@ -101,6 +134,7 @@ describe('Запросы к серверу', () => {
 
       request(application)
         .post('/api/v1/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send({ body: text })
         .expect(200)
         .then(() => {
@@ -155,6 +189,7 @@ describe('Запросы к серверу', () => {
 
       request(application)
         .post('/api/v1/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send({ body: text })
         .expect(200)
         .then(response => {
@@ -178,6 +213,7 @@ describe('Запросы к серверу', () => {
 
       request(application)
         .post('/api/v1/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send({ body: text })
         .expect(200)
         .then(response => {
@@ -212,6 +248,7 @@ describe('Запросы к серверу', () => {
 
       request(application)
         .post('/api/v1/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send({ body: text })
         .expect(200)
         .then(response => {
@@ -241,6 +278,7 @@ describe('Запросы к серверу', () => {
     it('Должна быть ошибка удаления при неизвестном имени', done => {
       request(application)
         .delete('/api/v1/notes/not-found')
+        .set('Authorization', `Bearer ${token}`)
         .expect(200)
         .then(response2 => {
           const { body: { status } } = response2;
@@ -255,6 +293,7 @@ describe('Запросы к серверу', () => {
 
       request(application)
         .post('/api/v1/notes')
+        .set('Authorization', `Bearer ${token}`)
         .send({ body: text })
         .expect(200)
         .then(response => {
@@ -265,6 +304,7 @@ describe('Запросы к серверу', () => {
           setTimeout(() => {
             request(application)
               .delete(`/api/v1/notes/${body.result.name}`)
+              .set('Authorization', `Bearer ${token}`)
               .expect(200)
               .then(response2 => {
                 const { body: { status } } = response2;

@@ -1,15 +1,21 @@
 const mongoose = require('mongoose');
-const { OK, NOT_FOUND } = require('../../constants/answer-codes');
+const { OK, NOT_FOUND, NO_ACCESS } = require('../../constants/answer-codes');
+const { MANAGER_PRIVILEGES } = require('../../constants');
+
 const noteSchema = require('../../../schemas/note.schema');
 
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = (request, response) => {
-  const { name } = request.params;
+  const { params: { name }, user: { privilege } } = request;
+
+  if (!MANAGER_PRIVILEGES.includes(privilege)) {
+    return response.status(200).json({ status: NO_ACCESS });
+  }
 
   const action = Note.remove({ name });
 
-  action
+  return action
     .then(result => {
       if (result.result.n) {
         return response.status(200).json({

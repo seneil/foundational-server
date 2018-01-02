@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('./passport-jwt');
 
 const router = express.Router();
 
@@ -8,19 +9,19 @@ const getKeywords = require('./routes/get-keywords');
 const getKeyword = require('./routes/get-keyword');
 const postNote = require('./routes/post-note');
 const deleteNote = require('./routes/delete-note');
-// const postAccount = require('./routes/post-account');
+const signup = require('./accounts/signup');
+const login = require('./accounts/login');
+const profile = require('./accounts/profile');
 
 router.route('/v1/notes').get(getNotes);
 router.route('/v1/notes/:name').get(getNote);
-router.route('/v1/notes/:name').delete(deleteNote);
 router.route('/v1/keywords').get(getKeywords);
 router.route('/v1/keywords/:keyword').get(getKeyword);
-router.route('/v1/notes').post(postNote);
-// router.route('/v1/account').post(postAccount);
+router.route('/v1/notes').post(passport.authenticate('jwt', { session: false }), postNote);
+router.route('/v1/notes/:name').delete(passport.authenticate('jwt', { session: false }), deleteNote);
 
-router.use((request, response, next) => {
-  request.moderated = false;
-  next();
-});
+router.route('/v1/signup').post(signup);
+router.route('/v1/login').post(login);
+router.route('/v1/profile').get(passport.authenticate('jwt', { session: false }), profile);
 
 module.exports = router;

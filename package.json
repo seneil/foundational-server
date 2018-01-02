@@ -5,7 +5,10 @@
   "main": "./application/index.js",
   "private": true,
   "scripts": {
-    "test": "bash ./config/bin/test-jest",
+    "dev": "bash ./config/bin/server",
+    "test": "npm run lint && npm run test:unit && npm run test:e2e",
+    "test:unit": "bash ./config/bin/test-unit",
+    "test:e2e": "bash ./config/bin/test-e2e",
     "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application tests"
   },
   "keywords": [],
@@ -15,12 +18,16 @@
     "body-parser": "1.18.2",
     "crypto-js": "3.1.9-1",
     "express": "4.16.2",
+    "helmet": "3.9.0",
+    "jsonwebtoken": "8.1.0",
     "mongoose": "4.13.7",
     "mongoose-paginate": "5.0.3",
     "mongoose-unique-validator": "1.0.6",
     "morgan": "1.9.0",
     "nanoid": "0.1.1",
-    "node-metainspector": "git+https://github.com/dshster/node-metainspector.git"
+    "node-metainspector": "git+https://github.com/dshster/node-metainspector.git",
+    "passport": "0.4.0",
+    "passport-jwt": "3.0.1"
   },
   "engines": {
     "node": ">=6.9",

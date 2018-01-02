@@ -1,4 +1,4 @@
-const parseNote = require('../application/scripts/parse-note');
+const parseNote = require('../../application/scripts/parse-note');
 
 let note;
 
