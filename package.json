@@ -5,7 +5,10 @@
   "main": "./application/index.js",
   "private": true,
   "scripts": {
-    "test": "bash ./config/bin/test-jest",
+    "dev": "bash ./config/bin/server",
+    "test": "npm run lint && npm run test:unit && npm run test:e2e",
+    "test:unit": "bash ./config/bin/test-unit",
+    "test:e2e": "bash ./config/bin/test-e2e",
     "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application tests"
   },
   "keywords": [],
