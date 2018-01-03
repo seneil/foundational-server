@@ -60,7 +60,7 @@ const scrapeUrls = iterator => {
 };
 
 module.exports = (request, response) => {
-  const { body: { body }, user: { privilege } } = request;
+  const { body: { body }, user: { _id: accountId, privilege } } = request;
 
   if (!body) {
     return response.status(200).json({ status: NO_VALIDATE });
@@ -71,7 +71,7 @@ module.exports = (request, response) => {
   }
 
   const noteData = parseNote(body);
-  const note = Note.createNote(body, noteData);
+  const note = Note.createNote(accountId, body, noteData);
   const invalid = note.validateSync();
 
   if (invalid) {

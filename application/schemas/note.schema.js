@@ -47,13 +47,13 @@ const noteSchema = new Schema({
 
 noteSchema.plugin(uniqueValidator);
 
-noteSchema.statics.createNote = function(body, data) {
+noteSchema.statics.createNote = function(accountId, body, data) {
   const { emails, urls, keywords } = data;
 
   return new this({
     name: generate('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$@', 10),
     body,
-    account: '5a270a496d87db18200d0c2a',
+    account: mongoose.Types.ObjectId(accountId),
     keywords: keywords.map(keyword => new Tag({ title: keyword })),
     emails: emails.map(email => new Email({ email })),
     attachments: urls.map(url => new Attachment({ url: url.replace(/\/$/, '') })),
