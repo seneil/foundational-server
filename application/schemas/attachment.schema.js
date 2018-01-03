@@ -3,7 +3,7 @@ const Schema = require('mongoose').Schema;
 const attachmentSchema = new Schema({
   url: {
     type: String,
-    required: true,
+    index: true,
   },
   title: String,
   ogTitle: String,
