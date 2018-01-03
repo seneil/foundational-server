@@ -30,6 +30,11 @@ describe('Проверка парсинга хештегов', () => {
     expect(parseNote('Тестовая заметка #test #twitter #foo#bar #brok/en'))
       .toHaveProperty('keywords', ['test', 'twitter', 'brok']);
   });
+
+  it('Должны быть только уникальные хештеги в поле keywords', () => {
+    expect(parseNote('Тестовая заметка #test #twitter #foo#bar #twitter #brok/en #test'))
+      .toHaveProperty('keywords', ['test', 'twitter', 'brok']);
+  });
 });
 
 describe('Проверка парсинга емайл адресов', () => {
@@ -40,6 +45,11 @@ describe('Проверка парсинга емайл адресов', () => {
 
   it('Должно быть поле emails с массивом емайлов', () => {
     expect(parseNote('Тестовая заметка email@domain.com broken @domain.com test@test.net'))
+      .toHaveProperty('emails', ['email@domain.com', 'test@test.net']);
+  });
+
+  it('Должны быть только уникальные адреса емайл в поле emails', () => {
+    expect(parseNote('Тестовая заметка email@domain.com test@test.net broken @domain.com, email@domain.com broken @domain.com test@test.net'))
       .toHaveProperty('emails', ['email@domain.com', 'test@test.net']);
   });
 });
@@ -57,6 +67,11 @@ describe('Проверка парсинга ссылок', () => {
 
   it('Должно быть парсинг нескольких адресов', () => {
     expect(parseNote('Тестовая заметка http://amazon.com google.com'))
+      .toHaveProperty('urls', ['http://amazon.com', 'http://google.com']);
+  });
+
+  it('Должно быть только уникальные адреса', () => {
+    expect(parseNote('Тестовая заметка http://amazon.com google.com amazon.com http://google.com'))
       .toHaveProperty('urls', ['http://amazon.com', 'http://google.com']);
   });
 

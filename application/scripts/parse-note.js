@@ -10,41 +10,41 @@ module.exports = function(note) {
     replace: '$1$2$4',
   }];
 
-  const assets = { keywords: [], emails: [], urls: [] };
+  const assets = { keywords: new Set(), emails: new Set(), urls: new Set() };
 
   note
     .replace(keywordRegexp, keyword => {
-      const keywordItem = keyword.trim().replace(/^#+/, '');
+      const keywordItem = keyword.trim()
+        .replace(/^#+/, '');
 
-      if (!assets.keywords.includes(keywordItem)) {
-        assets.keywords.push(keywordItem);
-      }
-
+      assets.keywords.add(keywordItem);
       return '';
     })
     .replace(emailRegexp, email => {
-      assets.emails.push(email);
+      assets.emails.add(email);
       return '';
     })
     .replace(urlRegexp, url => {
+      let transformedUrl;
+
       if (!url.match(/^[a-zA-Z]+:\/\//)) {
         url = `http://${url}`;
       }
 
-      if (!assets.urls.includes(url)) {
-        let transformedUrl;
+      transformations.forEach(form => {
+        if (form.regexp.test(url)) {
+          transformedUrl = url.replace(form.regexp, form.replace);
+        }
+      });
 
-        transformations.forEach(form => {
-          if (form.regexp.test(url)) {
-            transformedUrl = url.replace(form.regexp, form.replace);
-          }
-        });
-
-        assets.urls.push(transformedUrl || url);
-      }
+      assets.urls.add(transformedUrl || url);
 
       return '';
     });
 
-  return assets;
+  return {
+    keywords: Array.from(assets.keywords),
+    emails: Array.from(assets.emails),
+    urls: Array.from(assets.urls),
+  };
 };
