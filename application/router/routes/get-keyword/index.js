@@ -12,7 +12,7 @@ module.exports = (request, response) => {
   const { limit = 10, offset = 0 } = request.query;
   const { keyword } = request.params;
 
-  Note.paginate({ 'keywords.title': keyword }, { datetime: -1, limit: Number(limit), offset: Number(offset) })
+  Note.paginate({ 'keywords.title': keyword }, { sort: { datetime: -1 }, limit: Number(limit), offset: Number(offset) })
     .then(result => {
       const { docs, total } = result;
 
