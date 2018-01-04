@@ -103,7 +103,7 @@ describe('Запросы к серверу', () => {
         });
     });
 
-    it('Должен вернуться список ключевых слов', done => {
+    it.skip('Должен вернуться список ключевых слов', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         
         #mlab #development`;
@@ -127,7 +127,7 @@ describe('Запросы к серверу', () => {
         });
     });
 
-    it('Должна вернуться заметка по ключевому слову', done => {
+    it.skip('Должна вернуться заметка по ключевому слову', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         
         #mlab #development`;
@@ -205,7 +205,7 @@ describe('Запросы к серверу', () => {
         });
     });
 
-    it('Должна вернуться оформленная заметка c вложением сайтом', done => {
+    it.skip('Должна вернуться оформленная заметка c вложением сайтом', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         You may use this domain in examples without prior coordination or asking for permission.
         
@@ -240,7 +240,7 @@ describe('Запросы к серверу', () => {
         });
     });
 
-    it('Должна вернуться оформленная заметка c вложением картинкой', done => {
+    it.skip('Должна вернуться оформленная заметка c вложением картинкой', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         You may use this domain in examples without prior coordination or asking for permission.
         

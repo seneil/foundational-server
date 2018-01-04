@@ -14,7 +14,7 @@ module.exports = (request, response) => {
   const limit = Number(query.limit) || 10;
   const offset = Number(query.offset) || 0;
 
-  Note.paginate({}, { sort: { datetime: -1 }, limit, offset })
+  Note.paginate({ public: true }, { sort: { datetime: -1 }, limit, offset })
     .then(result => {
       const { docs, total } = result;
 
