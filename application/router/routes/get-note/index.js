@@ -7,7 +7,7 @@ const Note = mongoose.model('Note', noteSchema);
 module.exports = (request, response) => {
   const { name } = request.params;
 
-  const action = Note.findOne({ name });
+  const action = Note.findOne({ name, public: true });
 
   action
     .then(result => {
