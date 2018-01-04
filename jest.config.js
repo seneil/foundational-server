@@ -1,7 +1,7 @@
 const options = {
   verbose: true,
   collectCoverage: true,
-  testURL: 'http://localhost:8000',
+  testURL: 'http://127.0.0.1:8000',
 };
 
 module.exports = options;
