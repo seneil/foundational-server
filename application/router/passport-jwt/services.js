@@ -1,20 +1,21 @@
+const config = require('config');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const passportJWT = require('passport-jwt');
 
-const config = require('../../../application.config');
+const jwtConfig = config.get('jwt');
 
 const ExtractJwt = passportJWT.ExtractJwt;
 
 const accountServices = {
   jwtOptions: {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken('jwt'),
-    secretOrKey: config.account.secretOrKey,
+    secretOrKey: jwtConfig.secretOrKey,
     ignoreExpiration: false,
   },
 
   generatePasswordHash: password => {
-    const { hashIterations, saltLength, hashLength } = config.account;
+    const { hashIterations, saltLength, hashLength } = jwtConfig;
 
     const salt = crypto.randomBytes(saltLength)
       .toString('base64');
@@ -26,15 +27,15 @@ const accountServices = {
   },
 
   verifyPasswordHash: (password, hash, salt) => {
-    const { hashIterations, hashLength } = config.account;
+    const { hashIterations, hashLength } = jwtConfig;
 
     return hash === crypto.pbkdf2Sync(password, salt, hashIterations, hashLength, 'sha512')
       .toString('hex');
   },
 
   jwtSign: payload => jwt.sign(payload, accountServices.jwtOptions.secretOrKey, {
-    expiresIn: config.account.expiresIn,
-    issuer: config.account.issuer,
+    expiresIn: jwtConfig.expiresIn,
+    issuer: jwtConfig.issuer,
   }),
 };
 
