@@ -205,7 +205,7 @@ describe('Запросы к серверу', () => {
         });
     });
 
-    it.skip('Должна вернуться оформленная заметка c вложением сайтом', done => {
+    it('Должна вернуться оформленная заметка c вложением сайтом', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         You may use this domain in examples without prior coordination or asking for permission.
         
@@ -224,6 +224,7 @@ describe('Запросы к серверу', () => {
           setTimeout(() => {
             request(application)
               .get(`/api/v1/notes/${body.result.name}`)
+              .set('Authorization', `Bearer ${token}`)
               .expect(200)
               .then(response2 => {
                 const { body: { status, result } } = response2;
@@ -240,7 +241,7 @@ describe('Запросы к серверу', () => {
         });
     });
 
-    it.skip('Должна вернуться оформленная заметка c вложением картинкой', done => {
+    it('Должна вернуться оформленная заметка c вложением картинкой', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         You may use this domain in examples without prior coordination or asking for permission.
         
@@ -259,6 +260,7 @@ describe('Запросы к серверу', () => {
           setTimeout(() => {
             request(application)
               .get(`/api/v1/notes/${body.result.name}`)
+              .set('Authorization', `Bearer ${token}`)
               .expect(200)
               .then(response2 => {
                 const { body: { status, result } } = response2;
