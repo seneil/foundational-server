@@ -18,7 +18,7 @@ const getCredentials = () => ({
 
 const signupAccount = (credentials = getCredentials()) =>
   request(application)
-    .post('/api/v1/signup')
+    .post('/api/v1/profile/signup')
     .send(credentials)
     .expect(200);
 
@@ -74,10 +74,10 @@ describe('Запросы к серверу', () => {
     db.collections.notes.remove(done);
   });
 
-  describe('GET /notes', () => {
+  describe('GET /public', () => {
     it('Должен возвращаться пустой список заметок', done => {
       request(application)
-        .get('/api/v1/notes')
+        .get('/api/v1/public')
         .expect(200)
         .then(response => {
           const { body: { status, result } } = response;
@@ -165,10 +165,10 @@ describe('Запросы к серверу', () => {
     });
   });
 
-  describe('GET /note/:noteName', () => {
+  describe('GET /public/:noteName', () => {
     it('Должна вернуться ошибка ненайденной заметки', done => {
       request(application)
-        .get('/api/v1/notes/not-found')
+        .get('/api/v1/public/not-found')
         .expect(200)
         .then(response => {
           const { body: { status } } = response;
@@ -179,7 +179,7 @@ describe('Запросы к серверу', () => {
     });
   });
 
-  describe('POST /note', () => {
+  describe('POST /notes', () => {
     it('Должна быть сохранена и вернуться оформленная заметка', done => {
       const text = `This domain is established to be used for illustrative examples in documents.
         You may use this domain in examples without prior coordination or asking for permission.
@@ -274,7 +274,7 @@ describe('Запросы к серверу', () => {
     });
   });
 
-  describe('DELETE /note', () => {
+  describe('DELETE /notes', () => {
     it('Должна быть ошибка удаления при неизвестном имени', done => {
       request(application)
         .delete('/api/v1/notes/not-found')

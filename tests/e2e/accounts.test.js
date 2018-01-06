@@ -14,7 +14,7 @@ const getCredentials = () => ({
 
 const signupAccount = (credentials = getCredentials()) =>
   request(application)
-    .post('/api/v1/signup')
+    .post('/api/v1/profile/signup')
     .send(credentials)
     .expect(200);
 
@@ -29,7 +29,7 @@ describe('Управление аккаунтами', () => {
     application.close(done);
   });
 
-  it('POST /signup', done => {
+  it('POST /profile/signup', done => {
     signupAccount()
       .then(response => {
         const { body: { status, result } } = response;
@@ -40,7 +40,7 @@ describe('Управление аккаунтами', () => {
       });
   });
 
-  it('POST /signup dublicate data', done => {
+  it('POST /profile/signup dublicate data', done => {
     const credentials = {
       username: `test${+new Date()}`,
       email: `test${+new Date()}@example.ru`,
@@ -63,9 +63,9 @@ describe('Управление аккаунтами', () => {
       });
   });
 
-  it('POST /signup wrong form', done => {
+  it('POST /profile/signup wrong form', done => {
     request(application)
-      .post('/api/v1/signup')
+      .post('/api/v1/profile/signup')
       .send({
         username: 'dshster',
       })
@@ -120,7 +120,7 @@ describe('Управление аккаунтами', () => {
       });
   });
 
-  it('POST /login', done => {
+  it('POST /profile/login', done => {
     const credentials = {
       username: `test${+new Date()}`,
       email: `test${+new Date()}@example.ru`,
@@ -134,7 +134,7 @@ describe('Управление аккаунтами', () => {
         expect(body.status).toBe(OK);
 
         request(application)
-          .post('/api/v1/login')
+          .post('/api/v1/profile/login')
           .send({
             email: credentials.email,
             password: credentials.password,
@@ -150,7 +150,7 @@ describe('Управление аккаунтами', () => {
       });
   });
 
-  it('POST /login wrong form data', done => {
+  it('POST /profile/login wrong form data', done => {
     signupAccount()
       .then(response => {
         const { body } = response;
@@ -158,7 +158,7 @@ describe('Управление аккаунтами', () => {
         expect(body.status).toBe(OK);
 
         request(application)
-          .post('/api/v1/login')
+          .post('/api/v1/profile/login')
           .send({
             email: 'wrong-email@example.ru',
             password: '-=wrong-password=-',
@@ -173,7 +173,7 @@ describe('Управление аккаунтами', () => {
       });
   });
 
-  it('POST /login empty form data', done => {
+  it('POST /profile/login empty form data', done => {
     signupAccount()
       .then(response => {
         const { body } = response;
@@ -181,7 +181,7 @@ describe('Управление аккаунтами', () => {
         expect(body.status).toBe(OK);
 
         request(application)
-          .post('/api/v1/login')
+          .post('/api/v1/profile/login')
           .send({
             email: '',
             password: '',
@@ -196,9 +196,9 @@ describe('Управление аккаунтами', () => {
       });
   });
 
-  it('POST /login without registration', done => {
+  it('POST /profile/login without registration', done => {
     request(application)
-      .post('/api/v1/login')
+      .post('/api/v1/profile/login')
       .send({
         email: 'anything@example.ru',
         password: '-=anything-password=-',
