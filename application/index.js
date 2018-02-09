@@ -13,7 +13,7 @@ app.use(helmet());
 app.use(helmet.referrerPolicy({ policy: 'same-origin' }));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(morgan(env === 'test' ? 'dev' : 'combined'));
+app.use(morgan(env === 'test' ? 'development' : 'combined'));
 app.use('/api', router);
 
 app.listen(port, () => {
