@@ -43,6 +43,10 @@ const noteSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  updated: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 noteSchema.plugin(uniqueValidator);

@@ -9,12 +9,12 @@ noteSchema.plugin(mongoosePaginate);
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = (request, response) => {
-  const { query, user: { _id: accountId } } = request;
+  const { query } = request;
 
   const limit = Number(query.limit) || 10;
   const offset = Number(query.offset) || 0;
 
-  Note.paginate({ account: accountId }, { sort: { datetime: -1 }, limit, offset })
+  Note.paginate({ public: true }, { sort: { datetime: -1 }, limit, offset })
     .then(result => {
       const { docs, total } = result;
 

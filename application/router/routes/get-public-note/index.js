@@ -5,9 +5,9 @@ const noteSchema = require('../../../schemas/note.schema');
 const Note = mongoose.model('Note', noteSchema);
 
 module.exports = (request, response) => {
-  const { params: { name }, user: { _id: accountId } } = request;
+  const { name } = request.params;
 
-  const action = Note.findOne({ name, account: accountId });
+  const action = Note.findOne({ name, public: true });
 
   action
     .then(result => {
