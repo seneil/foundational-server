@@ -4,6 +4,7 @@ const { OK, NOT_FOUND, NO_VALIDATE } = require('../../constants/answer-codes');
 const scrapeUrl = require('../../../scripts/scrape-url');
 const parseNote = require('../../../scripts/parse-note');
 const updateNoteData = require('../../../scripts/update-note-data');
+const scrapeImage = require('../../../scripts/scrape-image');
 
 const noteSchema = require('../../../schemas/note.schema');
 const attachmentSchema = require('../../../schemas/attachment.schema');
@@ -28,14 +29,26 @@ const scrapeUrls = (_id, iterator) => {
           },
         })
         .then(note => Promise.all([note, scrapeUrl(url)]))
-        .then(([note, scraped]) => Note
-          .updateOne({
-            _id: note._id, 'attachments.url': url,
-          }, {
-            $set: {
-              'attachments.$': new Attachment({ url, ...scraped }),
-            },
-          }))
+        .then(([note, scraped]) => {
+          const { image } = scraped;
+          const { datetime } = note;
+
+          const criteria = { _id: note._id, 'attachments.url': url };
+          const updateOne = attachment => Note
+            .updateOne(criteria, {
+              $set: {
+                'attachments.$': new Attachment(attachment),
+              },
+            });
+
+          if (image) {
+            return scrapeImage({ uri: image, date: new Date(datetime) })
+              .then(imageProps => updateOne({ url, ...scraped, imageProps }))
+              .catch(() => updateOne({ url, ...scraped }));
+          }
+
+          return updateOne({ url, ...scraped });
+        })
         .then(result => {
           console.log(`Update attachment: ${url}`, { result });
           scrape();

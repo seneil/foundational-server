@@ -4,6 +4,7 @@ const { WRITE_PRIVILEGES } = require('../../constants');
 
 const parseNote = require('../../../scripts/parse-note');
 const scrapeUrl = require('../../../scripts/scrape-url');
+const scrapeImage = require('../../../scripts/scrape-image');
 
 const noteSchema = require('../../../schemas/note.schema');
 const attachmentSchema = require('../../../schemas/attachment.schema');
@@ -37,14 +38,26 @@ const scrapeUrls = iterator => {
             result: { url },
           });
         })
-        .then(([note, scraped]) => Note
-          .updateOne({
-            _id: note._id, 'attachments.url': url,
-          }, {
-            $set: {
-              'attachments.$': new Attachment({ url, ...scraped }),
-            },
-          }))
+        .then(([note, scraped]) => {
+          const { image } = scraped;
+          const { datetime } = note;
+
+          const criteria = { _id: note._id, 'attachments.url': url };
+          const updateOne = attachment => Note
+            .updateOne(criteria, {
+              $set: {
+                'attachments.$': new Attachment(attachment),
+              },
+            });
+
+          if (image) {
+            return scrapeImage({ uri: image, date: new Date(datetime) })
+              .then(imageProps => updateOne({ url, ...scraped, imageProps }))
+              .catch(() => updateOne({ url, ...scraped }));
+          }
+
+          return updateOne({ url, ...scraped });
+        })
         .then(result => {
           console.log(`Update attachment: ${url}`, { result });
           scrape();
@@ -63,11 +76,13 @@ module.exports = (request, response) => {
   const { body: { body }, user: { _id: accountId, privilege } } = request;
 
   if (!body) {
-    return response.status(200).json({ status: NO_VALIDATE });
+    return response.status(200)
+      .json({ status: NO_VALIDATE });
   }
 
   if (!WRITE_PRIVILEGES.includes(privilege)) {
-    return response.status(200).json({ status: NO_ACCESS });
+    return response.status(200)
+      .json({ status: NO_ACCESS });
   }
 
   const noteData = parseNote(body);
@@ -77,10 +92,12 @@ module.exports = (request, response) => {
   if (invalid) {
     const { errors } = invalid;
 
-    return response.status(200).json({
-      status: NO_VALIDATE,
-      result: Object.values(errors).map(error => error.message),
-    });
+    return response.status(200)
+      .json({
+        status: NO_VALIDATE,
+        result: Object.values(errors)
+          .map(error => error.message),
+      });
   }
 
   return note
@@ -94,13 +111,15 @@ module.exports = (request, response) => {
         scrapeUrls(attachmentsIterator);
       }
 
-      response.status(200).json({
-        status: OK,
-        result,
-      });
+      response.status(200)
+        .json({
+          status: OK,
+          result,
+        });
     })
-    .catch(error => response.status(200).json({
-      status: ERROR,
-      result: error,
-    }));
+    .catch(error => response.status(200)
+      .json({
+        status: ERROR,
+        result: error,
+      }));
 };
