@@ -10,13 +10,16 @@ const application = async() => {
   try {
     await mongoose.connect(uri);
   } catch (error) {
-    Promise.reject(error);
+    return Promise.reject(error);
   }
 
-  logger.info('MongoDB connected to: %s', uri);
+  return logger.info('MongoDB connected to: %s', uri);
 };
 
 application()
-  .catch(error => logger.error('MongoDB connection error %o', error));
+  .catch(error => {
+    logger.error('MongoDB connection error %s', error.message);
+    process.exit(1);
+  });
 
 module.exports = mongoose.connection;
