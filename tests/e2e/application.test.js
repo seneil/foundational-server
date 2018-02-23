@@ -31,7 +31,8 @@ describe('Запросы к серверу', () => {
       .then(response => {
         const { body: { status, result } } = response;
 
-        expect(status).toBe(OK);
+        expect(status)
+          .toBe(OK);
         token = result.token;
         done();
       });
@@ -82,8 +83,10 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body: { status, result } } = response;
 
-          expect(status).toBe(OK);
-          expect(result).toHaveProperty('notes', []);
+          expect(status)
+            .toBe(OK);
+          expect(result)
+            .toHaveProperty('notes', []);
           done();
         });
     });
@@ -97,8 +100,10 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body: { status, result } } = response;
 
-          expect(status).toBe(OK);
-          expect(result).toHaveProperty('keywords', []);
+          expect(status)
+            .toBe(OK);
+          expect(result)
+            .toHaveProperty('keywords', []);
           done();
         });
     });
@@ -120,8 +125,10 @@ describe('Запросы к серверу', () => {
             .then(response => {
               const { body: { status, result } } = response;
 
-              expect(status).toBe(OK);
-              expect(result).toHaveProperty('keywords', ['development', 'mlab']);
+              expect(status)
+                .toBe(OK);
+              expect(result)
+                .toHaveProperty('keywords', ['development', 'mlab']);
               done();
             });
         });
@@ -145,8 +152,10 @@ describe('Запросы к серверу', () => {
               const { body: { status, result } } = response;
               const { notes } = result;
 
-              expect(status).toBe(OK);
-              expect(notes.length).toBe(1);
+              expect(status)
+                .toBe(OK);
+              expect(notes.length)
+                .toBe(1);
               done();
             });
         });
@@ -159,7 +168,8 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body: { status } } = response;
 
-          expect(status).toBe(NOT_FOUND);
+          expect(status)
+            .toBe(NOT_FOUND);
           done();
         });
     });
@@ -173,7 +183,8 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body: { status } } = response;
 
-          expect(status).toBe(NOT_FOUND);
+          expect(status)
+            .toBe(NOT_FOUND);
           done();
         });
     });
@@ -196,11 +207,16 @@ describe('Запросы к серверу', () => {
           const { body: { status, result } } = response;
           const { attachments, keywords } = result;
 
-          expect(status).toBe(OK);
-          expect(result).toHaveProperty('type', 'article');
-          expect(attachments[0].url).toBe('http://example.com');
-          expect(keywords[0].title).toBe('mlab');
-          expect(keywords[1].title).toBe('development');
+          expect(status)
+            .toBe(OK);
+          expect(result)
+            .toHaveProperty('type', 'article');
+          expect(attachments[0].url)
+            .toBe('http://example.com');
+          expect(keywords[0].title)
+            .toBe('mlab');
+          expect(keywords[1].title)
+            .toBe('development');
           done();
         });
     });
@@ -219,7 +235,8 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body } = response;
 
-          expect(body.status).toBe(OK);
+          expect(body.status)
+            .toBe(OK);
 
           setTimeout(() => {
             request(application)
@@ -230,11 +247,16 @@ describe('Запросы к серверу', () => {
                 const { body: { status, result } } = response2;
                 const { attachments } = result;
 
-                expect(status).toBe(OK);
-                expect(attachments[0]).toHaveProperty('title', 'Scratched document');
-                expect(attachments[0]).toHaveProperty('ogTitle', 'OpenGraph Title: Scratched document');
-                expect(attachments[0]).toHaveProperty('ogDescription', 'OpenGraph Description');
-                expect(attachments[0]).toHaveProperty('image', 'http://example.com/images/example.png');
+                expect(status)
+                  .toBe(OK);
+                expect(attachments[0])
+                  .toHaveProperty('title', 'Scratched document');
+                expect(attachments[0])
+                  .toHaveProperty('ogTitle', 'OpenGraph Title: Scratched document');
+                expect(attachments[0])
+                  .toHaveProperty('ogDescription', 'OpenGraph Description');
+                expect(attachments[0])
+                  .toHaveProperty('image', 'http://example.com/images/example.png');
                 done();
               });
           }, 1000);
@@ -255,7 +277,8 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body } = response;
 
-          expect(body.status).toBe(OK);
+          expect(body.status)
+            .toBe(OK);
 
           setTimeout(() => {
             request(application)
@@ -266,9 +289,12 @@ describe('Запросы к серверу', () => {
                 const { body: { status, result } } = response2;
                 const { attachments } = result;
 
-                expect(status).toBe(OK);
-                expect(attachments[0]).toHaveProperty('type', 'image');
-                expect(attachments[0]).toHaveProperty('image', 'http://example.com/images/example.png');
+                expect(status)
+                  .toBe(OK);
+                expect(attachments[0])
+                  .toHaveProperty('type', 'image');
+                expect(attachments[0])
+                  .toHaveProperty('image', 'http://example.com/images/example.png');
                 done();
               });
           }, 1000);
@@ -285,7 +311,8 @@ describe('Запросы к серверу', () => {
         .then(response2 => {
           const { body: { status } } = response2;
 
-          expect(status).toBe(NOT_FOUND);
+          expect(status)
+            .toBe(NOT_FOUND);
           done();
         });
     });
@@ -301,7 +328,8 @@ describe('Запросы к серверу', () => {
         .then(response => {
           const { body } = response;
 
-          expect(body.status).toBe(OK);
+          expect(body.status)
+            .toBe(OK);
 
           setTimeout(() => {
             request(application)
@@ -311,7 +339,8 @@ describe('Запросы к серверу', () => {
               .then(response2 => {
                 const { body: { status } } = response2;
 
-                expect(status).toBe(OK);
+                expect(status)
+                  .toBe(OK);
                 done();
               });
           }, 1000);
