@@ -1,4 +1,5 @@
 const Schema = require('mongoose').Schema;
+const imagePropsSchema = require('./image-props.schema');
 
 const attachmentSchema = new Schema({
   url: {
@@ -13,6 +14,7 @@ const attachmentSchema = new Schema({
   charset: String,
   type: String,
   image: String,
+  imageProps: imagePropsSchema,
   datetime: {
     type: Date,
     default: Date.now,

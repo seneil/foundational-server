@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const logger = require('./../application/common/logger');
 
 const app = express();
 const router = require('./router');
@@ -21,7 +22,7 @@ app.listen(port, () => {
     require('./db');
   }
 
-  console.log(`Find the server at: http://localhost:${port}/`);
+  logger.info('Find the server at: http://localhost:%s/', port);
 });
 
 module.exports = app;

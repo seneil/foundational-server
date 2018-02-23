@@ -18,7 +18,7 @@ const signupAccount = (credentials = getCredentials()) =>
     .send(credentials)
     .expect(200);
 
-describe.skip('Управление аккаунтами', () => {
+describe('Управление аккаунтами', () => {
   beforeAll(() => {
     db = mongoose.connection;
     application = require('../../application/index');

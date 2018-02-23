@@ -1,13 +1,13 @@
 const Schema = require('mongoose').Schema;
 const uniqueValidator = require('mongoose-unique-validator');
 
-const emailValidator = (value, respond) => {
+const emailValidator = email => {
   const emailRegex = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
 
-  respond(emailRegex.test(value));
+  return emailRegex.test(email);
 };
 
-const lengthValidator = (value, respond) => respond(value.length && value.length <= 128);
+const lengthValidator = value => value.length && value.length <= 128;
 
 const accountSchema = new Schema({
   username: {

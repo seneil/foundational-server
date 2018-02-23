@@ -1,7 +1,16 @@
+const path = require('path');
+
 module.exports = {
   application: {
     port: 3001,
     env: 'staging',
+  },
+  attachment: {
+    quality: 85,
+    folderLength: 10,
+    filenameLength: 10,
+    salt: 'default-secret',
+    storage: path.resolve(__dirname, '../', 'storage'),
   },
   mongodb: {
     uri: 'mongodb://192.168.56.5:27017/note-keeper-scratch',

@@ -1,22 +1,24 @@
 const config = require('config');
 const mongoose = require('mongoose');
+const logger = require('./../application/common/logger');
 
 mongoose.Promise = global.Promise;
 
-const { uri } = config.get('mongodb');
+const application = async() => {
+  const { uri } = config.get('mongodb');
 
-const promise = mongoose.connect(uri, {
-  useMongoClient: true,
-});
+  try {
+    await mongoose.connect(uri);
+  } catch (error) {
+    return Promise.reject(error);
+  }
 
-promise
-  .then(db => {
-    const { host, port, name } = db;
+  return logger.info('MongoDB connected to: %s', uri);
+};
 
-    console.log(`MongoDB connected to: mongodb://${host}:${port}/${name}`);
-  })
+application()
   .catch(error => {
-    console.log(`MongoDB ${error.message}`);
+    logger.error('MongoDB connection error %s', error.message);
     process.exit(1);
   });
 
