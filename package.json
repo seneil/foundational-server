@@ -9,7 +9,9 @@
     "test": "npm run lint && npm run test:unit && npm run test:e2e",
     "test:unit": "bash ./config/bin/test-unit",
     "test:e2e": "bash ./config/bin/test-e2e",
-    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application tests"
+    "lint": "eslint --cache -c .eslintrc --ext .jsx,.js application tests",
+    "apib": "aglio --theme-template default -i doc/note-keeper.apib -o doc/note-keeper.html",
+    "apib:live": "aglio -s --theme-template default -i doc/note-keeper.apib -o doc/note-keeper.html"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +42,7 @@
     "npm": ">=4.0"
   },
   "devDependencies": {
+    "aglio": "2.3.0",
     "eslint": "3.19.0",
     "eslint-config-airbnb": "15.1.0",
     "eslint-plugin-import": "2.8.0",

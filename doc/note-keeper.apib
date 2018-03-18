@@ -1,0 +1,340 @@
+FORMAT: 1A
+HOST: https://keeper.shvalyov.ru/api/v1
+
+# Note Keeper
+
+# Group Accounts management
+
+## Registration [POST /profile/signup]
+
+  - Request with body (application/json)
+      - Attributes (object)
+          - Include username
+          - Include email
+          - password: `secret` (string, required)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - username: `John Doe` (string)
+            - Include JWT
+
+  - Response 200 (application/json)
+      - Attributes (noValidate, required)
+
+  - Response 200 (application/json)
+      - Attributes (noValidate, required)
+          - result (array)
+
+## Authorization [POST /profile/login]
+
+  - Request with body (application/json)
+      - Attributes (object)
+          - Include email
+          - password: `secret` (string, required)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - Include username
+            - Include JWT
+            - Include lastAuth
+
+  - Response 200 (application/json)
+      - Attributes (noValidate, required)
+
+  - Response 200 (application/json)
+      - Attributes (notFound, required)
+
+## Profile [GET /profile]
+
+  - Request Profile (application/json)
+      - Headers
+
+            Authorization: Bearer header.payload.secret
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - Include username
+            - Include email
+            - Include manager
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+# Group Public Notes
+
+## Notes [GET /public{?offset,limit}]
+
+  - Parameters
+      - offset: 0 (number, optional)
+      - limit: 10 (number, optional)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - notes (array[publicNote])
+            - Include pagination
+
+## Note [GET /public/{name}]
+
+  - Parameters
+      - name: `o1LT5Eshza` (string)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result (publicNote)
+
+  - Response 200 (application/json)
+      - Attributes (notFound, required)
+
+## Keywords [GET /public/keywords]
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - Include keywords
+            - length: `3` (number)
+
+## Keyword [GET /public/keywords/{keyword}{?offset,limit}]
+
+  - Parameters
+      - keyword: `Imodium` (string)
+      - offset: 0 (number, optional)
+      - limit: 10 (number, optional)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - notes (array[publicNote])
+            - Include pagination
+
+# Group Notes
+
+## Append Note [POST /notes]
+
+  - Request with body (application/json)
+      - Headers
+
+              Authorization: Bearer header.payload.secret
+
+      - Attributes (object)
+          - body: `Vision-oriented optimal Graphical User Interface` (string, required)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result (noteClean)
+
+  - Response 200 (application/json)
+      - Attributes (noValidate, required)
+
+  - Response 200 (application/json)
+      - Attributes (noAccess, required)
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+## Update Notes [PUT /notes]
+
+  - Request with body (application/json)
+      - Headers
+
+              Authorization: Bearer header.payload.secret
+
+      - Attributes (object)
+          - body
+            - action: (enum)
+              - `publish` (string)
+              - `unpublish` (string)
+            - names: `o1LT5Eshza` (array)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - modified: 1 (number)
+
+  - Response 200 (application/json)
+      - Attributes (noValidate, required)
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+## Update Note [PUT /notes/{name}]
+
+  - Request with body (application/json)
+      - Headers
+
+              Authorization: Bearer header.payload.secret
+
+      - Attributes (object)
+          - body: `Vision-oriented optimal Graphical User Interface` (string, required)
+
+  - Parameters
+      - name: `o1LT5Eshza` (string)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - modified: 1 (number)
+
+  - Response 200 (application/json)
+      - Attributes (noValidate, required)
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+## Delete Note [DELETE /notes/{name}]
+
+  - Request Delete (application/json)
+      - Headers
+
+              Authorization: Bearer header.payload.secret
+
+  - Parameters
+      - name: `o1LT5Eshza` (string)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+
+  - Response 200 (application/json)
+      - Attributes (noAccess, required)
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+## Notes [GET /notes{?offset,limit}]
+  - Headers
+
+          Authorization: Bearer header.payload.secret
+
+  - Parameters
+    - offset: 0 (number, optional)
+    - limit: 10 (number, optional)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result
+            - notes (array[privateNote])
+            - Include pagination
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+## Note [GET /notes/{name}]
+  - Headers
+
+          Authorization: Bearer header.payload.secret
+
+  - Parameters
+    - name: `o1LT5Eshza` (string)
+
+  - Response 200 (application/json)
+      - Attributes (ok, required)
+          - result (privateNote)
+
+  - Response 200 (application/json)
+      - Attributes (notFound, required)
+
+  - Response 401 (text/plain)
+      - Body
+
+            Unauthorized
+
+# Data Structures
+
+## JWT (object)
+- token: `header.payload.secret`
+
+## lastAuth (object)
+- lastAuth: `2018-03-02T22:51:02+03:00`
+
+## username (object)
+- username: `John Doe` (string, required) - User name
+
+## email (object)
+- email: `john_doe@example.com` (string, required)
+
+## manager (object)
+- privilege: `manager` (string)
+
+## publicNote (object)
+- Include note
+- public: true (boolean)
+
+## privateNote (object)
+- Include note
+- public: false (boolean)
+
+## note (object)
+- Include noteRaw
+- attachments: (array[attachment])
+
+## noteClean (object)
+- Include noteRaw
+- attachments: (array[attachmentClean])
+
+## noteRaw (object)
+- name: `o1LT5Eshza` (string) - note unique name
+- body: `Vision-oriented optimal Graphical User Interface` (string)
+- type: `Article` (string)
+- Include keywords
+- emails: `jmintoffg@tinyurl.com` (array)
+- account: `5a9ab154fc13ae1a3d000bb8` (string)
+- datetime: `2018-03-02T22:51:02+03:00` (string)
+- updated: `2018-03-02T22:51:02+03:00` (string)
+
+## keywords (object)
+- keywords: `Cortisporin`, `Imodium`, `Staxyn` (array)
+
+## props (object)
+- path: `200x229.jpg/dddddd` (string)
+- name: `000000` (string)
+- ext: `jpg` (string)
+
+## attachmentClean (object)
+- url: `https://discovery.com/primis/in/faucibus/orci/luctus/et/ultrices.aspx` (string)
+- type: `Article` (string)
+- datetime: `2018-03-02T22:51:02+03:00` (string)
+
+## attachment (object)
+- url: `https://discovery.com/primis/in/faucibus/orci/luctus/et/ultrices.aspx` (string)
+- title: `Vision-oriented optimal Graphical User Interface` (string)
+- ogTitle: ` ` (string)
+- description: `Proin interdum mauris non ligula pellentesque ultrices. Phasellus id sapien in sapien iaculis congue. Vivamus metus arcu, adipiscing molestie, hendrerit at, vulputate vitae, nisl. Aenean lectus. Pellentesque eget nunc. Donec quis orci eget orci vehicula condimentum. Curabitur in libero ut massa volutpat convallis. Morbi odio odio, elementum eu, interdum eu, tincidunt in, leo. Maecenas pulvinar lobortis est.` (string)
+- ogDescription: ` ` (string)
+- ogLocale: `ru-RU` (string)
+- charset: `utf-8` (string)
+- type: `Article` (string)
+- image: `http://dummyimage.com/200x229.jpg/dddddd/000000` (string)
+- imageProps: (props)
+- datetime: `2018-03-02T22:51:02+03:00` (string)
+
+## pagination (object)
+- total: 100 (number, required)
+- limit: 10 (number, required)
+- offset: 0 (number, required)
+
+## ok (object)
+- status: ok (required, fixed)
+
+## noValidate (object)
+- status: noValidate (required, fixed)
+
+## noAccess (object)
+- status: noAccess (required, fixed)
+
+## notFound (object)
+- status: notFound (required, fixed)
