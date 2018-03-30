@@ -21,4 +21,10 @@ module.exports = {
     hashIterations: 100000,
     secretOrKey: 'default-secret',
   },
+  telegram: {
+    token: '<Telegram bot token>',
+  },
+  ngrok: {
+    token: '<Ngrok auth token>',
+  },
 };
