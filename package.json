@@ -30,11 +30,13 @@
     "mongoose-unique-validator": "2.0.0",
     "morgan": "1.9.0",
     "nanoid": "0.1.1",
+    "ngrok": "3.0.1",
     "node-metainspector": "git+https://github.com/dshster/node-metainspector.git",
     "passport": "0.4.0",
     "passport-jwt": "3.0.1",
     "request": "2.83.0",
     "request-promise": "4.2.2",
+    "telegraf": "3.20.0",
     "winston": "3.0.0-rc1"
   },
   "engines": {
