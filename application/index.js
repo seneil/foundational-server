@@ -22,7 +22,7 @@ app.listen(port, () => {
     require('./db');
   }
 
-  logger.info('Find the server at: http://localhost:%s/', port);
+  logger.info('Find the server at: http://localhost:%s/api/v1/', port);
 });
 
 module.exports = app;

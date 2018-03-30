@@ -1,7 +1,10 @@
 const express = require('express');
+const config = require('config');
 const passport = require('./passport-jwt');
 
 const router = express.Router();
+
+const { token } = config.get('telegram');
 
 const getPublicNotes = require('./routes/get-public-notes');
 const getPublicNote = require('./routes/get-public-note');
@@ -19,6 +22,8 @@ const signup = require('./accounts/signup');
 const login = require('./accounts/login');
 const profile = require('./accounts/profile');
 
+const telegram = require('./telegram');
+
 router.route('/v1/public').get(getPublicNotes);
 router.route('/v1/public/:name').get(getPublicNote);
 router.route('/v1/keywords').get(getKeywords);
@@ -34,5 +39,7 @@ router.route('/v1/notes/:name').delete(passport.authenticate('jwt', { session: f
 router.route('/v1/profile').get(passport.authenticate('jwt', { session: false }), profile);
 router.route('/v1/profile/signup').post(signup);
 router.route('/v1/profile/login').post(login);
+
+router.route(`/v1/receive/${token}`).post(telegram);
 
 module.exports = router;
