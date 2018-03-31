@@ -4,7 +4,6 @@ const MANAGER = 'manager';
 const OWNER = 'owner';
 
 const STAGING = 'staging';
-const DEVELOPMENT = 'development';
 const DEPLOYMENT = 'deployment';
 
 module.exports = {
@@ -16,7 +15,6 @@ module.exports = {
   MANAGER_PRIVILEGES: [MANAGER, OWNER],
   ENV: {
     STAGING,
-    DEVELOPMENT,
     DEPLOYMENT,
   },
 };

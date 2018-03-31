@@ -1,10 +1,9 @@
 const express = require('express');
-const config = require('config');
 const passport = require('./passport-jwt');
 
 const router = express.Router();
 
-const { token } = config.get('telegram');
+const telegraf = require('./telegram');
 
 const getPublicNotes = require('./routes/get-public-notes');
 const getPublicNote = require('./routes/get-public-note');
@@ -22,8 +21,6 @@ const signup = require('./accounts/signup');
 const login = require('./accounts/login');
 const profile = require('./accounts/profile');
 
-const telegram = require('./telegram');
-
 router.route('/v1/public').get(getPublicNotes);
 router.route('/v1/public/:name').get(getPublicNote);
 router.route('/v1/keywords').get(getKeywords);
@@ -40,6 +37,7 @@ router.route('/v1/profile').get(passport.authenticate('jwt', { session: false })
 router.route('/v1/profile/signup').post(signup);
 router.route('/v1/profile/login').post(login);
 
-router.route(`/v1/receive/${token}`).post(telegram);
+router.route(telegraf.context.apiWebhookPath)
+  .post((request, response) => telegraf.handleUpdate(request.body, response));
 
 module.exports = router;
