@@ -38,6 +38,10 @@ router.route('/v1/profile/signup').post(signup);
 router.route('/v1/profile/login').post(login);
 
 router.route(telegraf.context.apiWebhookPath)
-  .post((request, response) => telegraf.handleUpdate(request.body, response));
+  .post((request, response) => {
+    telegraf.handleUpdate(request.body);
+
+    return response.sendStatus(200);
+  });
 
 module.exports = router;
