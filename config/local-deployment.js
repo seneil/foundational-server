@@ -23,5 +23,6 @@ module.exports = {
   },
   telegram: {
     token: '<Telegram bot token>',
+    webHookDomain: 'https://keeper.shvalyov.ru',
   },
 };
