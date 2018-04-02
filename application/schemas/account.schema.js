@@ -1,6 +1,8 @@
 const Schema = require('mongoose').Schema;
 const uniqueValidator = require('mongoose-unique-validator');
 
+const telegramSchema = require('./telegram.schema');
+
 const emailValidator = email => {
   const emailRegex = /^([\w-.]+@([\w-]+.)+[\w-]{2,4})?$/;
 
@@ -12,8 +14,6 @@ const lengthValidator = value => value.length && value.length <= 128;
 const accountSchema = new Schema({
   username: {
     type: String,
-    unique: true,
-    required: true,
     validate: lengthValidator,
   },
   email: {
@@ -46,6 +46,7 @@ const accountSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  telegram: telegramSchema,
 });
 
 accountSchema.plugin(uniqueValidator);

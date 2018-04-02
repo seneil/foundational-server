@@ -1,10 +1,11 @@
-module.exports = bot => {
-  bot.start(ctx => ctx.reply('Welcome!'));
+const signup = require('./signup');
 
-  bot.on('text', ({ message }) => {
-    return bot.telegram.sendMessage(message.chat.id, 'answer', {
-      reply_to_message_id: message.message_id,
-    });
+module.exports = bot => {
+  bot.start(ctx => {
+    const { from, date } = ctx.message;
+
+    signup({ from, date })
+      .then(result => ctx.reply(result));
   });
 
   return bot;
