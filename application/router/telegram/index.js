@@ -16,13 +16,18 @@ const initialize = async bot => {
   await bot.telegram.deleteWebhook();
 
   if (env === STAGING) {
-    const url = await ngrok.connect({
-      authtoken,
-      addr: port,
-    });
+    try {
+      const url = await ngrok.connect({
+        authtoken,
+        addr: port,
+      });
 
-    logger.info('ngrok address: %s', url);
-    bot.telegram.setWebhook(`${url}/api${apiWebhookPath}`);
+      logger.info('ngrok address: %s', url);
+      bot.telegram.setWebhook(`${url}/api${apiWebhookPath}`);
+    } catch (error) {
+      logger.error('Error opening ngrok tunnel, %o', error);
+      process.exit(1);
+    }
 
     return bot;
   }

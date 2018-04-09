@@ -3,9 +3,10 @@ const express = require('express');
 const morgan = require('morgan');
 const helmet = require('helmet');
 const bodyParser = require('body-parser');
-const logger = require('./../application/common/logger');
 
 const app = express();
+
+const logger = require('./common/logger');
 const router = require('./router');
 
 const { port, env } = config.get('application');

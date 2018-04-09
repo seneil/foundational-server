@@ -1,7 +1,7 @@
 const express = require('express');
 const passport = require('./passport-jwt');
 
-const router = express.Router();
+const router = express.Router({});
 
 const telegraf = require('./telegram');
 
