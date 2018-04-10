@@ -4,7 +4,7 @@ const request = require('supertest');
 const mockDocument = require('./mock.document');
 const mockDummyDocument = require('./mock.dummy.document');
 
-const { OK, NOT_FOUND } = require('../../application/router/constants/answer-codes');
+const { OK, NOT_FOUND } = require('../../application/router/constants/server-codes');
 
 let db;
 let token;

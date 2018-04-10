@@ -1,20 +1,5 @@
-const READER = 'reader';
-const WRITER = 'writer';
-const MANAGER = 'manager';
-const OWNER = 'owner';
+exports.ACTIONS = require('./actions');
 
-const STAGING = 'staging';
-const DEPLOYMENT = 'deployment';
+exports.RIGHTS = require('./rights');
 
-module.exports = {
-  READER,
-  WRITER,
-  MANAGER,
-  OWNER,
-  WRITE_PRIVILEGES: [WRITER, MANAGER, OWNER],
-  MANAGER_PRIVILEGES: [MANAGER, OWNER],
-  ENV: {
-    STAGING,
-    DEPLOYMENT,
-  },
-};
+exports.CODES = require('./server-codes');

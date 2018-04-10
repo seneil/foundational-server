@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const logger = require('./../../../../application/common/logger');
 
 const { generatePasswordHash } = require('../../passport-jwt/services');
-const { NO_VALIDATE } = require('../../constants/answer-codes');
+const { NO_VALIDATE } = require('../../constants/server-codes');
 
 const accountSchema = require('../../../schemas/account.schema');
 

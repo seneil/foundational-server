@@ -1,4 +1,4 @@
-const { OK, NO_VALIDATE } = require('../../constants/answer-codes');
+const { OK, NO_VALIDATE } = require('../../constants/server-codes');
 const { PUBLISH, UNPUBLISH } = require('../../constants/actions');
 
 const publish = require('./publish');

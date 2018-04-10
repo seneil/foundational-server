@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { OK, NOT_FOUND, NO_ACCESS } = require('../../constants/answer-codes');
+const { OK, NOT_FOUND, NO_ACCESS } = require('../../constants/server-codes');
 const { MANAGER_PRIVILEGES } = require('../../constants');
 
 const noteSchema = require('../../../schemas/note.schema');

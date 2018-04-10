@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const { jwtSign, generatePasswordHash } = require('../../passport-jwt/services');
-const { OK, NO_VALIDATE } = require('../../constants/answer-codes');
+const { OK, NO_VALIDATE } = require('../../constants/server-codes');
 
 const accountSchema = require('../../../schemas/account.schema');
 

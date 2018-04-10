@@ -1,4 +1,4 @@
-const { OK } = require('../../constants/answer-codes');
+const { OK } = require('../../constants/server-codes');
 
 module.exports = (request, response) => {
   const { user: { username, email, privilege } } = request;

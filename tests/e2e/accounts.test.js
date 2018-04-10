@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const request = require('supertest');
 
-const { OK, NO_VALIDATE, NOT_FOUND, UNAUTHORIZED } = require('../../application/router/constants/answer-codes');
+const { OK, NO_VALIDATE, NOT_FOUND, UNAUTHORIZED } = require('../../application/router/constants/server-codes');
 
 let db;
 let application;

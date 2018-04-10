@@ -8,6 +8,7 @@ const app = express();
 
 const logger = require('./common/logger');
 const router = require('./router');
+const errorHandler = require('./common/error-handler');
 
 const { port, env } = config.get('application');
 
@@ -17,11 +18,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan(env === 'test' ? 'development' : 'combined'));
 app.use('/api', router);
+app.use(errorHandler);
 
 app.listen(port, () => {
-  if (config.has('mongodb.uri')) {
-    require('./db');
-  }
+  // if (config.has('mongodb.uri')) {
+  //   require('./db');
+  // }
 
   logger.info('Find the server at: http://localhost:%s/api/v1/', port);
 });

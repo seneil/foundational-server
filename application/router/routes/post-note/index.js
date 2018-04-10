@@ -1,4 +1,4 @@
-const { OK, NO_VALIDATE, NO_ACCESS } = require('../../constants/answer-codes');
+const { OK, NO_VALIDATE, NO_ACCESS } = require('../../constants/server-codes');
 const { WRITE_PRIVILEGES } = require('../../constants');
 
 const postNote = require('../../../controllers/post-note');

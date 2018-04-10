@@ -3,7 +3,7 @@ const passport = require('./passport-jwt');
 
 const router = express.Router({});
 
-const telegraf = require('./telegram');
+// const telegraf = require('./telegram');
 
 const getPublicNotes = require('./routes/get-public-notes');
 const getPublicNote = require('./routes/get-public-note');
@@ -37,11 +37,11 @@ router.route('/v1/profile').get(passport.authenticate('jwt', { session: false })
 router.route('/v1/profile/signup').post(signup);
 router.route('/v1/profile/login').post(login);
 
-router.route(telegraf.context.apiWebhookPath)
-  .post((request, response) => {
-    telegraf.handleUpdate(request.body);
-
-    return response.sendStatus(200);
-  });
+// router.route(telegraf.context.apiWebhookPath)
+//   .post((request, response) => {
+//     telegraf.handleUpdate(request.body);
+//
+//     return response.sendStatus(200);
+//   });
 
 module.exports = router;

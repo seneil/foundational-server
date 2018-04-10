@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { OK, NOT_FOUND, NO_VALIDATE } = require('../../constants/answer-codes');
+const { OK, NOT_FOUND, NO_VALIDATE } = require('../../constants/server-codes');
 
 const scrapeUrl = require('../../../scripts/scrape-url');
 const parseNote = require('../../../scripts/parse-note');

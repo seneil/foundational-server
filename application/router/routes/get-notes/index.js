@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
-const { OK } = require('../../constants/answer-codes');
+const { OK } = require('../../constants/server-codes');
 const noteSchema = require('../../../schemas/note.schema');
 
 noteSchema.plugin(mongoosePaginate);

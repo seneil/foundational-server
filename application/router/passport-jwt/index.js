@@ -10,17 +10,15 @@ const Account = mongoose.model('Account', accountSchema);
 
 const JwtStrategy = passportJWT.Strategy;
 
-const strategy = new JwtStrategy(jwtOptions, (payload, next) => {
+const strategy = new JwtStrategy(jwtOptions, async(payload, next) => {
   const { identity } = payload;
 
-  Account.findById(identity, { username: 1, email: 1, privilege: 1 })
-    .then(account => {
-      if (account) {
-        return next(null, account);
-      }
+  const account = await Account
+    .findById(identity, { username: 1, email: 1, privilege: 1 });
 
-      return next(null, false);
-    });
+  if (account) return next(null, account);
+
+  return next(null, false);
 });
 
 passport.use(strategy);

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { OK, NOT_FOUND } = require('../../constants/answer-codes');
+const { OK, NOT_FOUND } = require('../../constants/server-codes');
 const noteSchema = require('../../../schemas/note.schema');
 
 const Note = mongoose.model('Note', noteSchema);
