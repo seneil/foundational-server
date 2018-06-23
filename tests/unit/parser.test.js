@@ -1,4 +1,6 @@
-const parseNote = require('../../application/scripts/parse-note');
+const common = require('requirefrom')('application/common');
+
+const parseNote = common('/services/parse-note');
 
 let note;
 

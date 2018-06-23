@@ -1,35 +1,34 @@
-const { OK, NO_VALIDATE, NO_ACCESS } = require('../../constants/server-codes');
-const { WRITE_PRIVILEGES } = require('../../constants');
+const controllers = require('requirefrom')('application/controllers');
+const constants = require('requirefrom')('application/router/constants');
 
-const postNote = require('../../../controllers/post-note');
+const {
+  CODES: { OK, NO_VALIDATE, NO_ACCESS },
+  PERMISSION: { WRITE_PRIVILEGES },
+} = constants();
 
-module.exports = (request, response) => {
+const postNote = controllers('post-note');
+
+module.exports = async(request, response, next) => {
   const { body: { body }, user: { _id: accountId, privilege } } = request;
 
   if (!body) {
-    return response.status(200)
-      .json({ status: NO_VALIDATE });
+    return next({ status: NO_VALIDATE });
   }
 
   if (!WRITE_PRIVILEGES.includes(privilege)) {
-    return response.status(200)
-      .json({ status: NO_ACCESS });
+    return next({ status: NO_ACCESS });
   }
 
-  return postNote(body, accountId)
-    .then(result => response.status(200)
-      .json({
-        status: OK,
-        result,
-      }))
-    .catch(invalid => {
-      const { errors } = invalid;
+  try {
+    const result = await postNote(body, accountId);
 
-      return response.status(200)
-        .json({
-          status: NO_VALIDATE,
-          result: Object.values(errors)
-            .map(error => error.message),
-        });
+    return response.status(200)
+      .json({ status: OK, result });
+  } catch ({ errors }) {
+    return next({
+      status: NO_VALIDATE,
+      result: Object.values(errors)
+        .map(error => error.message),
     });
+  }
 };

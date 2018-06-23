@@ -1,4 +1,6 @@
-const { OK } = require('../../constants/server-codes');
+const constants = require('requirefrom')('application/common/constants');
+
+const { CODES: { OK } } = constants();
 
 module.exports = (request, response) => {
   const { user: { username, email, privilege } } = request;

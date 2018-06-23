@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const application = require('requirefrom')('application');
-const constants = require('requirefrom')('application/router/constants');
+const constants = require('requirefrom')('application/common/constants');
 
 const { parseNote, scrapeUrl, scrapeImage } = application('scripts');
 const { noteSchema, attachmentSchema } = application('schemas');

@@ -10,7 +10,9 @@ const request = require('request-promise')
 
 const { promisify } = require('util');
 
-const logger = require('../../application/common/logger');
+const common = require('requirefrom')('application/common');
+
+const logger = common('logger');
 
 const open = promisify(fs.open);
 const write = promisify(fs.write);

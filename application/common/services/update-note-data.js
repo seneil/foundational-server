@@ -1,8 +1,7 @@
 const mongoose = require('mongoose');
+const application = require('requirefrom')('application');
 
-const tagSchema = require('../schemas/tag.schema');
-const emailSchema = require('../schemas/email.schema');
-const attachmentSchema = require('../schemas/attachment.schema');
+const { tagSchema, emailSchema, attachmentSchema } = application('schemas');
 
 const Tag = mongoose.model('Tag', tagSchema);
 const Email = mongoose.model('Email', emailSchema);
